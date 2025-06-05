@@ -1,0 +1,12 @@
+{
+  "uuid": "174a376f-4dea-4b4e-8180-dbd0d7997899",
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest",
+  "children": [
+    "c52a4eeb-b4a8-4d48-b03a-3be0842001ac"
+  ],
+  "befores": [],
+  "afters": [],
+  "links": [],
+  "start": 1749115095358,
+  "stop": 1749115164429
+}

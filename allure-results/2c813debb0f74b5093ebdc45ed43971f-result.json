@@ -1,0 +1,92 @@
+{
+  "uuid": "b6e7058b-35bf-4e31-9f4a-42b2aa0e868c",
+  "historyId": "95d6b4c009a07cf7cbe18dee95111132",
+  "testCaseId": "88be41a0cd702429a98d730c58519352",
+  "fullName": "atf:atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(System.String)",
+  "labels": [
+    {
+      "name": "thread",
+      "value": ".NET TP Worker"
+    },
+    {
+      "name": "host",
+      "value": "ENDAUTOXA92UR3I"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "xUnit.net"
+    },
+    {
+      "name": "testClass",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(browserType: \"firefox\")"
+    },
+    {
+      "name": "package",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "feature",
+      "value": "WebElements"
+    },
+    {
+      "name": "suite",
+      "value": "BaseTests"
+    },
+    {
+      "name": "owner",
+      "value": "QA Team"
+    },
+    {
+      "name": "severity",
+      "value": "critical"
+    },
+    {
+      "name": "tag",
+      "value": "smoke"
+    },
+    {
+      "name": "tag",
+      "value": "login"
+    }
+  ],
+  "links": [],
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType)",
+  "status": "passed",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "[2025-06-04 11:42:49 INF] [] [] (XUnit) (AutomationFramework) Navigating to http://localhost:3000/webelements\r\n"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [
+    {
+      "name": "After navigating to : http://localhost:3000/webelements",
+      "source": "7a3d0452-65c6-4342-a83b-2a0f25d4d304-attachment",
+      "type": "image/png"
+    },
+    {
+      "name": "After Input",
+      "source": "076fd8e4-28fb-4d02-b1f7-eb63c9dfaa02-attachment",
+      "type": "image/png"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "browserType",
+      "value": "\"firefox\"",
+      "excluded": false
+    }
+  ],
+  "start": 1749026566632,
+  "stop": 1749026570983
+}

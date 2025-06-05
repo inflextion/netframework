@@ -1,0 +1,82 @@
+{
+  "uuid": "87c1b715-d359-4e31-84b0-e04b664156c1",
+  "historyId": "0eb6fb4ded930948c08f21cae6e564ee",
+  "testCaseId": "88be41a0cd702429a98d730c58519352",
+  "fullName": "atf:atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(System.String)",
+  "labels": [
+    {
+      "name": "thread",
+      "value": ".NET TP Worker"
+    },
+    {
+      "name": "host",
+      "value": "ENDAUTOXA92UR3I"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "xUnit.net"
+    },
+    {
+      "name": "testClass",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(browserType: \"chromium\")"
+    },
+    {
+      "name": "package",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "feature",
+      "value": "WebElements"
+    },
+    {
+      "name": "suite",
+      "value": "BaseTests"
+    },
+    {
+      "name": "owner",
+      "value": "QA Team"
+    },
+    {
+      "name": "severity",
+      "value": "critical"
+    },
+    {
+      "name": "tag",
+      "value": "smoke"
+    },
+    {
+      "name": "tag",
+      "value": "login"
+    }
+  ],
+  "links": [],
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType)",
+  "status": "broken",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "Target page, context or browser has been closed\nTarget page, context or browser has been closed",
+    "trace": "   at Microsoft.Playwright.Core.Waiter.WaitForPromiseAsync[T](Task`1 task, Action dispose) in /_/src/Playwright/Core/Waiter.cs:line 233\r\n   at Microsoft.Playwright.Core.Frame.WaitForLoadStateAsync(Nullable`1 state, FrameWaitForLoadStateOptions options) in /_/src/Playwright/Core/Frame.cs:line 235\r\n   at atf.UI.Pages.BasePage.WaitForPageLoadAsync(Int32 timeoutMs) in C:\\Repos\\dotnet-workshop\\atf\\UI\\Pages\\BasePage.cs:line 42\r\n   at atf.UI.Pages.BasePage.GoToAsync(String relativeUrl) in C:\\Repos\\dotnet-workshop\\atf\\UI\\Pages\\BasePage.cs:line 29\r\n   at atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType) in C:\\Repos\\dotnet-workshop\\atf\\Tests\\Tests.UI\\BaseUrlLaunchTest.cs:line 68\r\n   at Xunit.Sdk.TestInvoker`1.<>c__DisplayClass47_0.<<InvokeTestMethodAsync>b__1>d.MoveNext() in /_/src/xunit.execution/Sdk/Frameworks/Runners/TestInvoker.cs:line 259\r\n--- End of stack trace from previous location ---\r\n   at Xunit.Sdk.ExecutionTimer.AggregateAsync(Func`1 asyncAction) in /_/src/xunit.execution/Sdk/Frameworks/ExecutionTimer.cs:line 48\r\n   at Xunit.Sdk.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.core/Sdk/ExceptionAggregator.cs:line 90\n   at Microsoft.Playwright.Core.Waiter.<>c__DisplayClass15_0`1.<RejectOnEvent>b__0(Task`1 _) in /_/src/Playwright/Core/Waiter.cs:line 142\r\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\r\n--- End of stack trace from previous location ---\r\n   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\r\n   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.Playwright.Core.Waiter.WaitForPromiseAsync[T](Task`1 task, Action dispose) in /_/src/Playwright/Core/Waiter.cs:line 218"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [],
+  "parameters": [
+    {
+      "name": "browserType",
+      "value": "\"chromium\"",
+      "excluded": false
+    }
+  ],
+  "start": 1749026362575,
+  "stop": 1749026365064
+}

@@ -1,0 +1,92 @@
+{
+  "uuid": "02244def-d78b-4ee1-b70a-90203663ab0e",
+  "historyId": "831625d9feed066d8bf9d067dd0ac289",
+  "testCaseId": "88be41a0cd702429a98d730c58519352",
+  "fullName": "atf:atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(System.String)",
+  "labels": [
+    {
+      "name": "thread",
+      "value": ".NET TP Worker"
+    },
+    {
+      "name": "host",
+      "value": "ENDAUTOXA92UR3I"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "xUnit.net"
+    },
+    {
+      "name": "testClass",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(browserType: \"webkit\")"
+    },
+    {
+      "name": "package",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "feature",
+      "value": "WebElements"
+    },
+    {
+      "name": "suite",
+      "value": "BaseTests"
+    },
+    {
+      "name": "owner",
+      "value": "QA Team"
+    },
+    {
+      "name": "severity",
+      "value": "critical"
+    },
+    {
+      "name": "tag",
+      "value": "smoke"
+    },
+    {
+      "name": "tag",
+      "value": "login"
+    }
+  ],
+  "links": [],
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType)",
+  "status": "passed",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "[2025-06-04 11:42:31 INF] [] [] (XUnit) (AutomationFramework) Navigating to http://localhost:3000/webelements\r\n"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [
+    {
+      "name": "After navigating to : http://localhost:3000/webelements",
+      "source": "70a6bdc6-2a35-4942-86c5-e25370eb1f76-attachment",
+      "type": "image/png"
+    },
+    {
+      "name": "After Input",
+      "source": "bb29b0fd-8c62-4821-af32-247f6a750ca1-attachment",
+      "type": "image/png"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "browserType",
+      "value": "\"webkit\"",
+      "excluded": false
+    }
+  ],
+  "start": 1749026539650,
+  "stop": 1749026566591
+}

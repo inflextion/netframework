@@ -1,0 +1,92 @@
+{
+  "uuid": "630aeeec-de8b-4023-a3d1-59da59c02580",
+  "historyId": "0eb6fb4ded930948c08f21cae6e564ee",
+  "testCaseId": "88be41a0cd702429a98d730c58519352",
+  "fullName": "atf:atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(System.String)",
+  "labels": [
+    {
+      "name": "thread",
+      "value": ".NET TP Worker"
+    },
+    {
+      "name": "host",
+      "value": "ENDAUTOXA92UR3I"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "xUnit.net"
+    },
+    {
+      "name": "testClass",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(browserType: \"chromium\")"
+    },
+    {
+      "name": "package",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "feature",
+      "value": "WebElements"
+    },
+    {
+      "name": "suite",
+      "value": "BaseTests"
+    },
+    {
+      "name": "owner",
+      "value": "QA Team"
+    },
+    {
+      "name": "severity",
+      "value": "critical"
+    },
+    {
+      "name": "tag",
+      "value": "smoke"
+    },
+    {
+      "name": "tag",
+      "value": "login"
+    }
+  ],
+  "links": [],
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType)",
+  "status": "passed",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "[2025-06-04 11:42:54 INF] [] [] (XUnit) (AutomationFramework) Navigating to http://localhost:3000/webelements\r\n"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [
+    {
+      "name": "After navigating to : http://localhost:3000/webelements",
+      "source": "b126d87c-93a0-4353-a8cb-404798e48abe-attachment",
+      "type": "image/png"
+    },
+    {
+      "name": "After Input",
+      "source": "11a8a47f-f51d-4251-861d-0cad5afa3ce0-attachment",
+      "type": "image/png"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "browserType",
+      "value": "\"chromium\"",
+      "excluded": false
+    }
+  ],
+  "start": 1749026570987,
+  "stop": 1749026575457
+}

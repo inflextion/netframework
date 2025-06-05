@@ -1,0 +1,41 @@
+{
+  "directory": "allure-results",
+  "report": {
+    "clean": true
+  },
+  "environment": {
+    "Browser": "Multiple",
+    "Platform": "Windows",
+    "Framework": "Playwright + XUnit",
+    "Target": ".NET 9.0"
+  },
+  "categories": [
+    {
+      "name": "Ignored tests",
+      "matchedStatuses": [ "skipped" ]
+    },
+    {
+      "name": "Infrastructure problems",
+      "matchedStatuses": [ "broken", "failed" ],
+      "messageRegex": ".*selenium.*|.*driver.*|.*browser.*"
+    },
+    {
+      "name": "Outdated tests",
+      "matchedStatuses": [ "broken" ],
+      "traceRegex": ".*FileNotFound.*|.*NoSuchMethod.*"
+    },
+    {
+      "name": "Product defects",
+      "matchedStatuses": [ "failed" ]
+    },
+    {
+      "name": "Test defects",
+      "matchedStatuses": [ "broken" ]
+    }
+  ],
+  "executor": {
+    "name": "Local",
+    "type": "local",
+    "reportName": "Automation Test Framework Results"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "uuid": "e3fdc5d3-e711-483c-8bf6-b2377bcd3c0a",
+  "historyId": "95d6b4c009a07cf7cbe18dee95111132",
+  "testCaseId": "88be41a0cd702429a98d730c58519352",
+  "fullName": "atf:atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(System.String)",
+  "labels": [
+    {
+      "name": "thread",
+      "value": ".NET TP Worker"
+    },
+    {
+      "name": "host",
+      "value": "ENDAUTOXA92UR3I"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "xUnit.net"
+    },
+    {
+      "name": "testClass",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(browserType: \"firefox\")"
+    },
+    {
+      "name": "package",
+      "value": "atf.Tests.Tests.UI.BaseUrlLaunchTest"
+    },
+    {
+      "name": "feature",
+      "value": "WebElements"
+    },
+    {
+      "name": "suite",
+      "value": "BaseTests"
+    },
+    {
+      "name": "owner",
+      "value": "QA Team"
+    },
+    {
+      "name": "severity",
+      "value": "critical"
+    },
+    {
+      "name": "tag",
+      "value": "smoke"
+    },
+    {
+      "name": "tag",
+      "value": "login"
+    }
+  ],
+  "links": [],
+  "name": "atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType)",
+  "status": "broken",
+  "statusDetails": {
+    "known": false,
+    "muted": false,
+    "flaky": false,
+    "message": "Target page, context or browser has been closed\nCall log:\n  - waiting for Locator(\"label[for= 'text-input']\")",
+    "trace": "   at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls) in /_/src/Playwright/Transport/Connection.cs:line 206\r\n   at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal) in /_/src/Playwright/Transport/Connection.cs:line 535\r\n   at atf.UI.Pages.WebElementsPage.FillInTextInputBox(String text) in C:\\Repos\\dotnet-workshop\\atf\\UI\\Pages\\WebElementsPage.cs:line 22\r\n   at atf.Tests.Tests.UI.BaseUrlLaunchTest.Should_Launch_BaseUrl(String browserType) in C:\\Repos\\dotnet-workshop\\atf\\Tests\\Tests.UI\\BaseUrlLaunchTest.cs:line 72\r\n   at Xunit.Sdk.TestInvoker`1.<>c__DisplayClass47_0.<<InvokeTestMethodAsync>b__1>d.MoveNext() in /_/src/xunit.execution/Sdk/Frameworks/Runners/TestInvoker.cs:line 259\r\n--- End of stack trace from previous location ---\r\n   at Xunit.Sdk.ExecutionTimer.AggregateAsync(Func`1 asyncAction) in /_/src/xunit.execution/Sdk/Frameworks/ExecutionTimer.cs:line 48\r\n   at Xunit.Sdk.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.core/Sdk/ExceptionAggregator.cs:line 90"
+  },
+  "stage": "finished",
+  "steps": [],
+  "attachments": [
+    {
+      "name": "After navigating to : http://localhost:3000/home",
+      "source": "7bfa1894-114d-48d8-bcb3-f775dec05ce0-attachment",
+      "type": "image/png"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "browserType",
+      "value": "\"firefox\"",
+      "excluded": false
+    }
+  ],
+  "start": 1749026359776,
+  "stop": 1749026362569
+}

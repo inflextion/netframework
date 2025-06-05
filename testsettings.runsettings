@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!--
+    RunSettings file optimized for XUnit + Allure + Playwright tests
+  -->
+  <RunConfiguration>
+    <ReporterSwitch>allure</ReporterSwitch>
+  </RunConfiguration>
+
+  <TestExecution>
+    <!-- Control parallel execution at assembly level -->
+    <MaxCpuCount>0</MaxCpuCount>
+    <!-- Parallel execution within assemblies -->
+    <ParallelizeTestCollections>true</ParallelizeTestCollections>
+    <!-- Maximum number of parallel test collections -->
+    <MaxParallelThreads>4</MaxParallelThreads>
+  </TestExecution>
+
+  <!-- XUnit specific configuration -->
+  <XUnit>
+    <!-- Parallel execution settings for XUnit -->
+    <ParallelizeAssembly>true</ParallelizeAssembly>
+    <ParallelizeTestCollections>true</ParallelizeTestCollections>
+    <MaxParallelThreads>4</MaxParallelThreads>
+    <!-- Capture console output for debugging -->
+    <CaptureStandardOutput>true</CaptureStandardOutput>
+    <!-- Show live output during test execution -->
+    <ShowLiveOutput>true</ShowLiveOutput>
+  </XUnit>
+
+
+
+  <!-- Threading model - STA is good for UI tests like Playwright -->
+  <ExecutionThreadApartmentState>
+    <ApartmentState>STA</ApartmentState>
+  </ExecutionThreadApartmentState>
+</RunSettings>
