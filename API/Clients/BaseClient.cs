@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using atf.Core.Config;
+using RestSharp;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,13 +13,17 @@ namespace atf.API.Clients
     {
         protected readonly RestClient RestClient;
         private bool _disposed = false;
+        private static readonly IConfigManager _configManager = ConfigManager.Instance;
 
         protected BaseClient(string baseUrl)
         {
+            var timeoutMs = _configManager.Get<int>("ApiClient:TimeoutMs");
+            var timeout = timeoutMs > 0 ? TimeSpan.FromMilliseconds(timeoutMs) : TimeSpan.FromSeconds(30);
+            
             var options = new RestClientOptions(baseUrl)
             {
                 ThrowOnAnyError = false,
-                Timeout = TimeSpan.FromSeconds(30)
+                Timeout = timeout
             };
             RestClient = new RestClient(options);
         }

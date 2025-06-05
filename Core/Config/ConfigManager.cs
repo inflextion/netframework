@@ -21,6 +21,23 @@ namespace atf.Core.Config
         public static T Get<T>(string key) => _configuration.GetValue<T>(key);
 
         public static T GetSection<T>(string key) where T : new() => _configuration.GetSection(key).Get<T>();
+
+        /// <summary>
+        /// Gets the default instance for dependency injection scenarios.
+        /// </summary>
+        public static IConfigManager Instance => new ConfigManagerImplementation();
+    }
+
+    /// <summary>
+    /// Implementation of IConfigManager that delegates to the static ConfigManager.
+    /// </summary>
+    internal class ConfigManagerImplementation : IConfigManager
+    {
+        public IConfigurationRoot Configuration => ConfigManager.Configuration;
+
+        public T Get<T>(string key) => ConfigManager.Get<T>(key);
+
+        public T GetSection<T>(string key) where T : new() => ConfigManager.GetSection<T>(key);
     }
 }
 

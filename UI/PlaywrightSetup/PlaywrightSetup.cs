@@ -62,5 +62,5 @@ namespace atf.UI.PlaywrightSetup
                 throw new Exception("Failed to launch Playwright page.", ex);
             }
         }
-    }
+}
 }

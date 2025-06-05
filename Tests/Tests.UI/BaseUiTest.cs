@@ -6,7 +6,9 @@ using Xunit.Abstractions;
 using Serilog;
 using Xunit.Sdk;
 
-public abstract class BaseUiTest : IAsyncLifetime, IDisposable
+namespace atf.Tests.Tests.UI
+{
+    public abstract class BaseUiTest : IAsyncLifetime, IDisposable
 {
     protected IPage? Page { get; private set; } = default!;
     private IBrowserContext Context => Page?.Context;
@@ -24,6 +26,7 @@ public abstract class BaseUiTest : IAsyncLifetime, IDisposable
     public BaseUiTest(ITestOutputHelper output)
     {
         OutputHelper = output;
+        
         // Initialize logger for this test instance, using app config and TestOutput sink
         Logger = new LoggerConfiguration()
             //.ReadFrom.Configuration(atf.Core.Config.ConfigManager.Configuration)
@@ -104,4 +107,5 @@ public abstract class BaseUiTest : IAsyncLifetime, IDisposable
         // If you ever acquire other sync-only resources, clean them up here.
         // No need to reset logger since it's now per-instance and GC will clean up.
     }
+}
 }

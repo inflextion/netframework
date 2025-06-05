@@ -10,7 +10,7 @@ namespace atf.API.Fixtures
     /// </summary>
     public class DefaultApiTestFixture : ApiTestFixture
     {
-        protected override string BaseUrl => "https://httpbin.org";
+        protected override string BaseUrl => ConfigManager.Get<string>("TestApiSettings:HttpBinUrl") ?? "https://httpbin.org";
 
         protected override BaseClient CreateClient(RestClient restClient)
         {

@@ -1,4 +1,5 @@
 ﻿using atf.API.Clients;
+using atf.Core.Config;
 using RestSharp;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,12 +13,15 @@ namespace atf.API.Fixtures
     {
         public BaseClient Client { get; private set; }
         protected RestClient RestClient { get; private set; }
+        protected IConfigManager ConfigManager { get; private set; }
 
-        protected virtual string BaseUrl => "https://jsonplaceholder.typicode.com";
-        protected virtual TimeSpan Timeout => TimeSpan.FromSeconds(30);
+        protected virtual string BaseUrl => ConfigManager.Get<string>("TestApiSettings:BaseUrl") ?? "https://jsonplaceholder.typicode.com";
+        protected virtual TimeSpan Timeout => TimeSpan.FromMilliseconds(ConfigManager.Get<int>("ApiClient:TimeoutMs"));
 
         public async Task InitializeAsync()
         {
+            ConfigManager = atf.Core.Config.ConfigManager.Instance;
+            
             var options = new RestClientOptions(BaseUrl)
             {
                 ThrowOnAnyError = false,

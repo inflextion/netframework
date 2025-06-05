@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using atf.Core.Config;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace atf.Data.DatabaseContext
@@ -9,7 +10,9 @@ namespace atf.Data.DatabaseContext
     /// </summary>
     public static class DbContextFactory
     {
-        private static string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=TestDb;Trusted_Connection=true;";
+        private static readonly IConfigManager _configManager = ConfigManager.Instance;
+        private static string _connectionString = _configManager.Get<string>("ConnectionStrings:DefaultConnection") 
+                                                  ?? "Server=(localdb)\\mssqllocaldb;Database=TestDb;Trusted_Connection=true;";
 
         public static TestDbContext CreateContext()
         {
