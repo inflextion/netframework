@@ -1,5 +1,7 @@
 # .NET Test Automation Framework
 
+*Sponsored by coffee ☕, Claude 🤖, and bench 💺*
+
 A comprehensive test automation framework built with **.NET 9** for API, UI, and database testing. Designed with clean architecture principles and follows industry best practices for maintainable and scalable test automation.
 
 ## 🚀 Features
