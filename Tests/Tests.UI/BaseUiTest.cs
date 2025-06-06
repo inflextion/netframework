@@ -11,7 +11,7 @@ namespace atf.Tests.Tests.UI
 {
     public abstract class BaseUiTest : IAsyncLifetime, IDisposable
 {
-    protected IPage? Page { get; private set; } = default!;
+    protected IPage Page { get; private set; } = default!;
     private IBrowserContext Context => Page?.Context;
     /* same as 
      * private IBrowserContext? Context

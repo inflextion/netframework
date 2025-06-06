@@ -13,8 +13,8 @@ namespace atf.Core.Logging
     /// </summary>
     public static class CustomLogger
     {
-        private static ILogger? _baseLogger;
-        private static ILogger? _currentLogger;
+        private static ILogger _baseLogger;
+        private static ILogger _currentLogger;
 
         static CustomLogger()
         {

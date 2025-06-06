@@ -72,7 +72,7 @@ namespace atf.API.Clients
         }
 
         protected async Task<RestResponse> SendAsync<TRequest>(Method method, string uri, TRequest content)
-            where TRequest : class?
+            where TRequest : class
         {
             var request = new RestRequest(uri, method);
 

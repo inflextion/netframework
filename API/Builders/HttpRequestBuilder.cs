@@ -11,7 +11,7 @@ namespace Automation.API.Builders
     {
         private HttpMethod _method = HttpMethod.Get;
         private string _uri = string.Empty;
-        private object? _body;
+        private object _body;
         private readonly Dictionary<string, string> _headers = new();
 
         public HttpRequestBuilder WithMethod(HttpMethod method)

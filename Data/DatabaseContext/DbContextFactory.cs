@@ -21,7 +21,7 @@ namespace atf.Data.DatabaseContext
             return new TestDbContext(optionsBuilder.Options);
         }
 
-        public static TestDbContext CreateInMemoryContext(string? databaseName = null)
+        public static TestDbContext CreateInMemoryContext(string databaseName = null)
         {
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
             optionsBuilder.UseInMemoryDatabase(databaseName ?? Guid.NewGuid().ToString());
