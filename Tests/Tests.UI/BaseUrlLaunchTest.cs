@@ -41,42 +41,44 @@ namespace atf.Tests.Tests.UI
         [AllureTag("smoke", "login")]
         public async Task Should_Launch_BaseUrl(BrowserList browserType)
         {
-            // Arrange
-                       // Launch browser with specific type for this test
-            await LaunchBrowserAsync(browserType);
-
-            AllureHelper.WriteAllureEnvironmentProperties();
-
             var testName = $"{nameof(Should_Launch_BaseUrl)}_{browserType}_{DateTime.UtcNow:yyyyMMdd_HHmmss}";
-            var logFile = $"Logs/{testName}.log";
-            var caseLogger = new LoggerConfiguration()
-                .WriteTo.File(logFile,
-                    outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{TestName}] [{Browser}] ({TestContext}) ({Application}) {Message:lj}{NewLine}{Exception}")
-                .Enrich.WithProperty("TestName", testName)
-                .Enrich.WithProperty("Browser", browserType)
-                .CreateLogger();
-            caseLogger.Information("Test started!");
-
-            var connectionString = ConfigManager.Get<string>("ConnectionStrings:DefaultConnection");
-            if (!string.IsNullOrEmpty(connectionString))
+            await RunTestWithScreenshotOnFailure(async () =>
             {
-                DbContextFactory.SetConnectionString(connectionString);
-            }
-            var webElements = new WebElementsPage(Page, _settings, caseLogger);
+                // Arrange
+                // Launch browser with specific type for this test
+                await LaunchBrowserAsync(browserType);
 
-            // Act
-            await webElements.GoToAsync("/webelements");
-            caseLogger.Information("Navigating to {Url}", Page.Url);
-            await TakeScreenshot($"After navigating to : {Page.Url}");
-            await webElements.FillInTextInputBox("my first text");
-            await webElements.TakeScreenshotAsync("After Input"); // <-- Move screenshot logic to page object
+                AllureHelper.WriteAllureEnvironmentProperties();
 
-            // Assert
-            await Expect(Page.Locator(WebElementsSelectors.TextOutput)).ToContainTextAsync("my first text");
-            //TODO: Implement the assertion in the POM 
-            //await Expect( webElements.AssertTextOutputContains("my first text"); // <-- Move assertion to page object
-            webElements.AssertUrlContains(_settings.BaseUrl);
+                var logFile = $"Logs/{testName}.log";
+                var caseLogger = new LoggerConfiguration()
+                    .WriteTo.File(logFile,
+                        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{TestName}] [{Browser}] ({TestContext}) ({Application}) {Message:lj}{NewLine}{Exception}")
+                    .Enrich.WithProperty("TestName", testName)
+                    .Enrich.WithProperty("Browser", browserType)
+                    .CreateLogger();
+                caseLogger.Information("Test started!");
+
+                var connectionString = ConfigManager.Get<string>("ConnectionStrings:DefaultConnection");
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    DbContextFactory.SetConnectionString(connectionString);
+                }
+                var webElements = new WebElementsPage(Page, _settings, caseLogger);
+
+                // Act
+                await webElements.GoToAsync("/webelements");
+                caseLogger.Information("Navigating to {Url}", Page.Url);
+                await TakeScreenshot($"After navigating to : {Page.Url}");
+                await webElements.FillInTextInputBox("my first text");
+                await webElements.TakeScreenshotAsync("After Input"); // <-- Move screenshot logic to page object
+
+                // Assert
+                await Expect(Page.Locator(WebElementsSelectors.TextOutput)).ToContainTextAsync("my first text");
+                //TODO: Implement the assertion in the POM 
+                //await Expect( webElements.AssertTextOutputContains("my first text"); // <-- Move assertion to page object
+                webElements.AssertUrlContains(_settings.BaseUrl);
+            }, $"failure-{browserType}-{testName}");
         }
-
     }
 }

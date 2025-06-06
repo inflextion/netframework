@@ -79,6 +79,24 @@ namespace atf.Tests.Tests.UI
     }
 
     /// <summary>
+    /// Executes a test action and automatically takes a screenshot if the test fails.
+    /// </summary>
+    /// <param name="testAction">The test logic to execute</param>
+    /// <param name="screenshotName">Name for the failure screenshot (default: "test-failure")</param>
+    protected async Task RunTestWithScreenshotOnFailure(Func<Task> testAction, string screenshotName = "test-failure")
+    {
+        try
+        {
+            await testAction();
+        }
+        catch (Exception)
+        {
+            await TakeScreenshot(screenshotName);
+            throw; // Re-throw to maintain normal test failure behavior
+        }
+    }
+
+    /// <summary>
     /// Called once before any test in the class runs.
     /// </summary>
     public virtual async Task InitializeAsync()
