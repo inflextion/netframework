@@ -1,4 +1,5 @@
-﻿using atf.Data.DatabaseContext;
+﻿using atf.Core.Utils;
+using atf.Data.DatabaseContext;
 using atf.Data.Models;
 using atf.Data.Repositories;
 using System;
@@ -43,6 +44,24 @@ namespace atf.Tests.Helpers
                 IsActive = isActive
             };
             return _productRepository.Create(product);
+        }
+
+        /// <summary>
+        /// Creates a test user with fake data.
+        /// </summary>
+        public static User CreateFakeUser()
+        {
+            var fakeUser = TestDataFaker.CreateFakeUser();
+            return _userRepository.Create(fakeUser);
+        }
+
+        /// <summary>
+        /// Creates a test product with fake data.
+        /// </summary>
+        public static Product CreateFakeProduct()
+        {
+            var fakeProduct = TestDataFaker.CreateFakeProduct();
+            return _productRepository.Create(fakeProduct);
         }
 
         public static User GetUserByEmail(string email)

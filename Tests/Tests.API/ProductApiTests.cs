@@ -15,6 +15,7 @@ using RestSharp;
 using Allure.Net.Commons;
 using Allure.Xunit.Attributes.Steps;
 using atf.Core.Models;
+using atf.Core.Utils;
 
 namespace atf.Tests.Tests.API
 {
@@ -53,10 +54,7 @@ namespace atf.Tests.Tests.API
             caseLogger.Information("Test started: Creating a new product");
 
             var productRequest = new ProductRequestBuilder()
-                .WithId(new Random().Next(10000, 99999))
-                .WithName($"UnitTest Product {Guid.NewGuid():N}")
-                .WithCategory("Laptops")
-                .WithPrice(1234.56M)
+                .WithFakeData()
                 .Build();
 
             caseLogger.Information("Sending POST request to /api/products with payload: {@ProductRequest}", productRequest);
@@ -83,6 +81,35 @@ namespace atf.Tests.Tests.API
             AllureHelper.AttachString("Response Body", createdProduct.ToString(), "application/json", ".json");
 
             caseLogger.Information("Product created and validated successfully. Test finished.");
+        }
+
+        [Fact(DisplayName = "Should create product with mixed faker and real data")]
+        [AllureSeverity(SeverityLevel.normal)]
+        [AllureOwner("QA Team")]
+        [AllureTag("POST /api/products")]
+        public async Task PostProduct_WithMixedFakeData_ShouldReturnCreated()
+        {
+            // Arrange - Mix of fake and specific data
+            var productRequest = new ProductRequestBuilder()
+                .WithFakeId()           // Random ID
+                .WithFakeName()         // Random product name
+                .WithCategory("Laptops") // Specific category
+                .WithFakePrice(100, 500) // Random price in range
+                .Build();
+
+            Logger.Information("Creating product with mixed fake data: {@ProductRequest}", productRequest);
+
+            // Act
+            var productClient = Client as ProductApiClient;
+            var createdProduct = await productClient!.CreateProductAsync(productRequest, isTestRequest: true);
+
+            // Assert
+            Assert.NotNull(createdProduct);
+            Assert.Equal(productRequest.Name, createdProduct.Name);
+            Assert.Equal("Laptops", createdProduct.Category); // Verify specific category
+            Assert.True(createdProduct.Price >= 100 && createdProduct.Price <= 500); // Verify price range
+
+            Logger.Information("Product with mixed fake data created successfully");
         }
     }
 }

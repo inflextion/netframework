@@ -13,6 +13,7 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 - **Rich Reporting**: Allure integration with screenshots and detailed logs
 - **Structured Logging**: Serilog with configurable outputs and test context
 - **Configuration Management**: Environment-specific settings with `appsettings.json`
+- **Fake Test Data**: Bogus library integration for realistic test data generation
 - **Clean Architecture**: Layered design with clear separation of concerns
 - **No DI Container**: Manual dependency wiring for simplicity and control
 
@@ -44,7 +45,7 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 | **Logging** | Serilog | Structured logging |
 | **Reporting** | Allure | Test reporting and analytics |
 | **Configuration** | Microsoft.Extensions.Configuration | Settings management |
-| **Test Data** | AutoFixture | Test data generation |
+| **Test Data** | Bogus | Fake test data generation |
 
 ## 📁 Project Structure
 
@@ -221,10 +222,9 @@ public class ProductApiTests : BaseApiTest<DefaultApiTestFixture>
     [Fact]
     public async Task Should_Create_Product_Successfully()
     {
-        // Arrange
+        // Arrange - Using Bogus for fake test data
         var product = new ProductRequestBuilder()
-            .WithName("Test Product")
-            .WithPrice(99.99m)
+            .WithFakeData()  // Generates realistic fake data
             .Build();
 
         // Act
@@ -232,7 +232,28 @@ public class ProductApiTests : BaseApiTest<DefaultApiTestFixture>
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Test Product", result.Name);
+        Assert.Equal(product.Name, result.Name);
+        Assert.True(result.Price > 0);
+    }
+
+    [Fact]
+    public async Task Should_Create_Product_With_Mixed_Data()
+    {
+        // Arrange - Mix of fake and specific data
+        var product = new ProductRequestBuilder()
+            .WithFakeId()           // Random ID
+            .WithFakeName()         // Random product name
+            .WithCategory("Laptops") // Specific category
+            .WithFakePrice(100, 500) // Random price in range
+            .Build();
+
+        // Act
+        var result = await Client.CreateProductAsync(product);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Laptops", result.Category);
+        Assert.True(result.Price >= 100 && result.Price <= 500);
     }
 }
 ```
@@ -265,18 +286,34 @@ public class LoginTests : BaseUiTest
 [Fact]
 public async Task Should_Save_User_To_Database()
 {
-    // Arrange
-    using var context = DbContextFactory.CreateInMemoryContext();
-    var repository = new UserRepository(context);
-    var user = new User { Name = "Test User", Email = "test@example.com" };
+    // Arrange - Using fake test data
+    var user = DatabaseTestHelper.CreateFakeUser();
 
     // Act
-    await repository.AddAsync(user);
-    var savedUser = await repository.GetByEmailAsync("test@example.com");
+    var savedUser = DatabaseTestHelper.GetUserByEmail(user.Email);
 
     // Assert
     Assert.NotNull(savedUser);
-    Assert.Equal("Test User", savedUser.Name);
+    Assert.Equal(user.Name, savedUser.Name);
+    Assert.Equal(user.Email, savedUser.Email);
+}
+
+[Fact]
+public async Task Should_Create_Multiple_Fake_Products()
+{
+    // Arrange - Create multiple products with varied fake data
+    var products = new List<Product>();
+    for (int i = 0; i < 5; i++)
+    {
+        products.Add(DatabaseTestHelper.CreateFakeProduct());
+    }
+
+    // Act
+    var activeProducts = DatabaseTestHelper.GetActiveProducts();
+
+    // Assert
+    Assert.True(activeProducts.Count >= 5);
+    Assert.All(activeProducts, p => Assert.True(p.Price > 0));
 }
 ```
 
@@ -326,6 +363,53 @@ AllureApi.AddAttachment("log-file", "text/plain", logContent);
 - **In-memory database** for fast unit tests
 - **Real database** for integration tests
 - **Automatic cleanup** and test isolation
+
+### Test Data Generation
+- **Bogus library integration** for realistic fake data
+- **Fluent builder patterns** with faker methods
+- **Mix fake and real data** for flexible test scenarios
+- **No hardcoded test values** - fresh data every test run
+
+## 🎭 Test Data Examples
+
+### Using Fake Data in Builders
+```csharp
+// Complete fake data
+var product = new ProductRequestBuilder()
+    .WithFakeData()
+    .Build();
+
+// Mix of fake and specific data
+var product = new ProductRequestBuilder()
+    .WithFakeId()           // Random ID
+    .WithFakeName()         // Random product name  
+    .WithCategory("Laptops") // Specific category
+    .WithFakePrice(50, 200) // Random price in range
+    .Build();
+```
+
+### Direct Faker Usage
+```csharp
+// Generate individual fake values
+var email = TestDataFaker.FakeEmail();
+var name = TestDataFaker.FakeName();
+var price = TestDataFaker.FakePrice(10, 500);
+var category = TestDataFaker.FakeCategory();
+
+// Create complete fake entities
+var user = TestDataFaker.CreateFakeUser();
+var product = TestDataFaker.CreateFakeProduct();
+```
+
+### Database Test Data
+```csharp
+// Create fake entities in database
+var user = DatabaseTestHelper.CreateFakeUser();
+var product = DatabaseTestHelper.CreateFakeProduct();
+
+// Traditional approach still available
+var user = DatabaseTestHelper.CreateTestUser("Specific Name", "specific@email.com");
+```
 
 ## 🤝 Contributing
 

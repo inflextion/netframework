@@ -1,4 +1,5 @@
 ﻿using atf.API.Models;
+using atf.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,55 @@ namespace atf.API.Builders
         public ProductRequestBuilder WithPrice(decimal price)
         {
             _price = price;
+            return this;
+        }
+
+        /// <summary>
+        /// Uses faker to generate random test data for all fields.
+        /// </summary>
+        public ProductRequestBuilder WithFakeData()
+        {
+            var fakeProduct = TestDataFaker.CreateFakeProductRequest();
+            _id = fakeProduct.Id;
+            _name = fakeProduct.Name;
+            _category = fakeProduct.Category;
+            _price = fakeProduct.Price;
+            return this;
+        }
+
+        /// <summary>
+        /// Generates a random ID using faker.
+        /// </summary>
+        public ProductRequestBuilder WithFakeId()
+        {
+            _id = TestDataFaker.FakeId();
+            return this;
+        }
+
+        /// <summary>
+        /// Generates a random product name using faker.
+        /// </summary>
+        public ProductRequestBuilder WithFakeName()
+        {
+            _name = TestDataFaker.FakeProductName();
+            return this;
+        }
+
+        /// <summary>
+        /// Generates a random category using faker.
+        /// </summary>
+        public ProductRequestBuilder WithFakeCategory()
+        {
+            _category = TestDataFaker.FakeCategory();
+            return this;
+        }
+
+        /// <summary>
+        /// Generates a random price using faker.
+        /// </summary>
+        public ProductRequestBuilder WithFakePrice(decimal min = 1, decimal max = 2000)
+        {
+            _price = TestDataFaker.FakePrice(min, max);
             return this;
         }
 
