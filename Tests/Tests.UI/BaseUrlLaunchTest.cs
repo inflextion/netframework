@@ -10,6 +10,7 @@ using Allure.Net.Commons;
 using atf.Data.DatabaseContext;
 using Serilog;
 using atf.Tests.Helpers;
+using atf.Core.Enums;
 
 
 namespace atf.Tests.Tests.UI
@@ -30,17 +31,20 @@ namespace atf.Tests.Tests.UI
         }
 
         [Theory]
-        [InlineData(BrowserType.Chromium)]
-        [InlineData(BrowserType.Firefox)]
-        [InlineData(BrowserType.Webkit)]
+        [InlineData(BrowserList.Chromium)]
+        [InlineData(BrowserList.Firefox)]
+        [InlineData(BrowserList.Webkit)]
         [AllureSeverity(SeverityLevel.critical)]
         [AllureOwner("QA Team")]
         [Trait("Category", "Smoke")]
         [Trait("Priority", "High")]
         [AllureTag("smoke", "login")]
-        public async Task Should_Launch_BaseUrl(string browserType)
+        public async Task Should_Launch_BaseUrl(BrowserList browserType)
         {
             // Arrange
+                       // Launch browser with specific type for this test
+            await LaunchBrowserAsync(browserType);
+
             AllureHelper.WriteAllureEnvironmentProperties();
 
             var testName = $"{nameof(Should_Launch_BaseUrl)}_{browserType}_{DateTime.UtcNow:yyyyMMdd_HHmmss}";

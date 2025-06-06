@@ -1,4 +1,5 @@
 ﻿using Allure.Net.Commons;
+using atf.Core.Enums;
 using atf.UI.PlaywrightSetup;
 using Microsoft.Playwright;
 using System.Runtime.CompilerServices;
@@ -84,6 +85,26 @@ namespace atf.Tests.Tests.UI
     {
         Page = await PlaywrightLauncher.LaunchAsync();
        
+    }
+
+    /// <summary>
+    /// Launches a new page with a specific browser type for cross-browser testing.
+    /// Call this method in tests that need a specific browser.
+    /// </summary>
+    /// <param name="browserType">The browser type to launch</param>
+    protected async Task LaunchBrowserAsync(BrowserList browserType)
+    {
+        // Close existing page/context if any
+        if (Context is not null)
+            await Context.CloseAsync();
+        else if (Browser is not null)
+            await Browser.CloseAsync();
+
+        // Launch new page with specified browser
+        Page = await PlaywrightLauncher.LaunchAsync(browserType);
+        
+        // Update logger context with browser info
+        Logger = Logger.ForContext("Browser", browserType.ToString());
     }
 
     /// <summary>
