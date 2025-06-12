@@ -14,13 +14,6 @@ namespace atf.Tests.Tests.UI
 {
     protected IPage Page { get; private set; } = default!;
     protected IBrowserContext Context => Page?.Context;
-    /* same as 
-     * private IBrowserContext? Context
-        {
-            get { return Page?.Context; }
-        }
-     * 
-     */
     private IBrowser Browser => Context?.Browser;
     protected ITestOutputHelper OutputHelper { get; private set; }
     protected TestLogger TestLogger { get; private set; }
@@ -31,15 +24,6 @@ namespace atf.Tests.Tests.UI
         TestLogger = new TestLogger(output, GetType().Name, writeToFile: true, browserType: "TBD");
     }
 
-    /// <summary>
-    /// Configures test logging for the current test.
-    /// Call at the start of each test method for correct test name context.
-    /// </summary>
-    // You may remove this method if all logging is handled by the per-instance logger.
-    //protected virtual void ConfigureTestLogging([CallerMemberName] string testName = null)
-    //{
-    //    CustomLogger.ConfigureForTest(OutputHelper, testName ?? "UnknownTest");
-    //}
 
     protected async Task<string> TakeScreenshotAsync(string name, bool fullPage = true)
     {

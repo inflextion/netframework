@@ -10,7 +10,7 @@ namespace atf.Data.Repositories
 {
     /// <summary>
     /// Repository for maintaining <see cref="User"/> entities in the database.
-    /// Provides methods to create and retreve users.
+    /// Provides methods to create and retrieve users.
     /// </summary>
     public class UserRepository : IUserRepository
     {

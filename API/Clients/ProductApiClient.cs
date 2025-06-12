@@ -18,7 +18,6 @@ namespace atf.API.Clients
             var headers = new Dictionary<string, string>();
             
             // Add custom header for test requests if needed
-            // Currently not used, SendAsync doesn't take headers as a parameter
             if (isTestRequest)
             {
                 headers.Add("X-Test-Request", "true");

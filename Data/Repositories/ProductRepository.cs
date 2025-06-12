@@ -10,7 +10,7 @@ namespace atf.Data.Repositories
 {
     /// <summary>
     /// Repository for managing <see cref="Product"/> entities in the database.
-    /// Provides methods to create and retrieve products.
+    /// Provides methods for full CRUD operations including create, retrieve, update, delete, and search functionality.
     /// </summary>
     public class ProductRepository : IProductRepository
     {

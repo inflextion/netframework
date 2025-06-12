@@ -25,9 +25,6 @@ namespace atf.Tests.Tests.UI
         [Trait("Category", "Smoke")]
         [Trait("Priority", "High")]
         [AllureTag("smoke", "AdvancedWebElements")]
-        // TODO: Workshop Task - Fix AdvancedWebElementsPage selectors to match actual page elements
-        // Current selectors (.advanced-text-input-section) don't exist on the /advanced page
-        // Need to inspect the real page and update ILocator properties in AdvancedWebElementsPage.cs
         public async Task AdvancedWebElementsTest()
         {
             // Arrange
@@ -47,7 +44,7 @@ namespace atf.Tests.Tests.UI
             caseLogger.Information("Navigating to {Url}", Page.Url);
             await TakeScreenshotAsync($"After navigating to : {Page.Url}");
             await advancedWebElements.EnterTextInputAsync("Shadow DOM text");
-            await TakeScreenshotAsync("After Input"); // <-- Move screenshot logic to page object
+            await TakeScreenshotAsync("After Input");
 
             // Assert
             await advancedWebElements.AssertTextOutputAsync("Shadow DOM text");

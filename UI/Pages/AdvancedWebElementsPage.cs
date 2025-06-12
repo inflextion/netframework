@@ -7,111 +7,79 @@ namespace atf.UI.Pages
 {
     public class AdvancedWebElementsPage : BasePage
     {
-        // ILocator properties for advanced web elements
-        public ILocator TextInputSection { get; }
-        public ILocator TextInput { get; }
-        public ILocator TextInputOutput { get; }
-        public ILocator CounterSection { get; }
-        public ILocator CounterValue { get; }
-        public ILocator CounterIncrement { get; }
-        public ILocator CounterDecrement { get; }
-        public ILocator CounterReset { get; }
-        public ILocator DropdownSection { get; }
-        public ILocator Dropdown { get; }
-        public ILocator DropdownOutput { get; }
-        public ILocator CheckboxSection { get; }
-        public ILocator Checkbox { get; }
-        public ILocator CheckboxOutput { get; }
-        public ILocator RadioSection { get; }
-        public ILocator RadioInput { get; }
-        public ILocator RadioOutput { get; }
-        public ILocator ToggleSection { get; }
-        public ILocator ToggleEnableButton { get; }
-        public ILocator ToggleOutput { get; }
+        // Selectors as constants
+        private const string TextInputSelector = ".advanced-text-input-section input[type='text']";
+        private const string TextInputOutputSelector = ".advanced-text-input-section .output";
+        private const string CounterValueSelector = ".advanced-counter-section .counter-value";
+        private const string CounterIncrementSelector = ".advanced-counter-section .increment-btn";
+        private const string CounterDecrementSelector = ".advanced-counter-section .decrement-btn";
+        private const string CounterResetSelector = ".advanced-counter-section .reset-btn";
+        private const string DropdownSelector = ".advanced-dropdown-section select";
+        private const string DropdownOutputSelector = ".advanced-dropdown-section .output";
+        private const string CheckboxSelector = ".advanced-checkbox-section input[type='checkbox']";
+        private const string CheckboxOutputSelector = ".advanced-checkbox-section .output";
+        private const string RadioInputSelector = ".advanced-radio-section input[type='radio']";
+        private const string RadioOutputSelector = ".advanced-radio-section .output";
+        private const string ToggleEnableButtonSelector = ".advanced-toggle-section .enable-btn";
+        private const string ToggleOutputSelector = ".advanced-toggle-section .output";
 
         public AdvancedWebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
             : base(page, settings, logger)
         {
-            // Initialize locators using Page.Locator()
-            TextInputSection = Page.Locator(".advanced-text-input-section");
-            TextInput = TextInputSection.Locator("input[type='text']");
-            TextInputOutput = TextInputSection.Locator(".output");
-
-            CounterSection = Page.Locator(".advanced-counter-section");
-            CounterValue = CounterSection.Locator(".counter-value");
-            CounterIncrement = CounterSection.Locator(".increment-btn");
-            CounterDecrement = CounterSection.Locator(".decrement-btn");
-            CounterReset = CounterSection.Locator(".reset-btn");
-
-            DropdownSection = Page.Locator(".advanced-dropdown-section");
-            Dropdown = DropdownSection.Locator("select");
-            DropdownOutput = DropdownSection.Locator(".output");
-
-            CheckboxSection = Page.Locator(".advanced-checkbox-section");
-            Checkbox = CheckboxSection.Locator("input[type='checkbox']");
-            CheckboxOutput = CheckboxSection.Locator(".output");
-
-            RadioSection = Page.Locator(".advanced-radio-section");
-            RadioInput = RadioSection.Locator("input[type='radio']");
-            RadioOutput = RadioSection.Locator(".output");
-
-            ToggleSection = Page.Locator(".advanced-toggle-section");
-            ToggleEnableButton = ToggleSection.Locator(".enable-btn");
-            ToggleOutput = ToggleSection.Locator(".output");
         }
 
-        // 1. Text Input - using ILocator directly
+        // 1. Text Input - using BasePage methods
         public async Task EnterTextInputAsync(string text) =>
-            await TextInput.FillAsync(text);
+            await FillAsync(TextInputSelector, text);
 
         public async Task<string> GetTextInputOutputAsync() =>
-            await TextInputOutput.InnerTextAsync();
+            await InnerTextAsync(TextInputOutputSelector);
 
         public async Task AssertTextOutputAsync(string text) =>
-            await Expect(TextInputOutput).ToContainTextAsync(text);
+            await AssertOutputContains(TextInputOutputSelector, text);
 
-        // 2. Counter - using ILocator methods
+        // 2. Counter - using BasePage methods
         public async Task<string> GetCounterValueAsync() =>
-            await CounterValue.InnerTextAsync();
+            await InnerTextAsync(CounterValueSelector);
 
         public async Task ClickCounterIncrementAsync() =>
-            await CounterIncrement.ClickAsync();
+            await ClickAsync(CounterIncrementSelector);
 
         public async Task ClickCounterDecrementAsync() =>
-            await CounterDecrement.ClickAsync();
+            await ClickAsync(CounterDecrementSelector);
 
         public async Task ClickCounterResetAsync() =>
-            await CounterReset.ClickAsync();
+            await ClickAsync(CounterResetSelector);
 
         // 3. Dropdown
         public async Task SelectDropdownAsync(string value) =>
-            await Dropdown.SelectOptionAsync(value);
+            await SelectOptionAsync(DropdownSelector, value);
 
         public async Task<string> GetDropdownOutputAsync() =>
-            await DropdownOutput.InnerTextAsync();
+            await InnerTextAsync(DropdownOutputSelector);
 
         // 4. Checkbox Group
         public async Task CheckCheckboxAsync(int index) =>
-            await Checkbox.Nth(index).CheckAsync();
+            await CheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
 
         public async Task UncheckCheckboxAsync(int index) =>
-            await Checkbox.Nth(index).UncheckAsync();
+            await UncheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
 
         public async Task<string> GetCheckboxOutputAsync() =>
-            await CheckboxOutput.InnerTextAsync();
+            await InnerTextAsync(CheckboxOutputSelector);
 
         // 5. Radio Buttons
         public async Task SelectRadioAsync(int index) =>
-            await RadioInput.Nth(index).CheckAsync();
+            await CheckAsync($"{RadioInputSelector}:nth-child({index + 1})");
 
         public async Task<string> GetRadioOutputAsync() =>
-            await RadioOutput.InnerTextAsync();
+            await InnerTextAsync(RadioOutputSelector);
 
         // 6. Enable/Disable Toggle
         public async Task ClickToggleEnableAsync() =>
-            await ToggleEnableButton.ClickAsync();
+            await ClickAsync(ToggleEnableButtonSelector);
 
         public async Task<string> GetToggleOutputAsync() =>
-            await ToggleOutput.InnerTextAsync();
+            await InnerTextAsync(ToggleOutputSelector);
     }
 }

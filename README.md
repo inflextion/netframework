@@ -8,7 +8,7 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 
 - **Multi-Layer Testing**: API, UI, and Database test support
 - **Cross-Browser Testing**: Playwright integration with Chrome, Firefox, Safari, and Edge
-- **Modern Page Object Model**: ILocator-based approach with type safety and built-in waiting
+- **Modern Page Object Model**: Selector-based approach with BasePage common methods and consistent error handling
 - **API Testing**: RestSharp-based HTTP client with fluent builders and factory pattern
 - **Database Testing**: Entity Framework Core with SQL Server and In-Memory providers
 - **Advanced Reporting**: Comprehensive Allure system with automated archiving and history preservation
@@ -112,10 +112,10 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │       └── BaseUrlLaunchTest.cs
 │
 ├── UI/                            # UI Testing Layer
-│   ├── Pages/                     # Page Object Models with ILocator
-│   │   ├── BasePage.cs            # Base page with common functionality
-│   │   ├── WebElementsPage.cs     # Page with ILocator properties
-│   │   └── FormExamplesPage.cs    # Form interactions using ILocator
+│   ├── Pages/                     # Page Object Models with selector-based approach
+│   │   ├── BasePage.cs            # Base page with common functionality and error handling
+│   │   ├── WebElementsPage.cs     # Page with selector constants and BasePage methods
+│   │   └── AdvancedWebElementsPage.cs # Advanced page interactions using BasePage methods
 │   └── PlaywrightSetup/           # Browser initialization
 │       └── PlaywrightSetup.cs
 │
@@ -330,30 +330,30 @@ public class ProductApiTests : ProductApiTestBase
 }
 ```
 
-### UI Test Example with ILocator-based Page Objects
+### UI Test Example with Selector-based Page Objects
 ```csharp
-public class LoginTests : BaseUiTest
+public class WebElementsTests : BaseUiTest
 {
-    public LoginTests(ITestOutputHelper output) : base(output) { }
+    public WebElementsTests(ITestOutputHelper output) : base(output) { }
 
     [Fact]
-    public async Task Should_Login_With_Valid_Credentials()
+    public async Task Should_Enter_Text_And_Verify_Output()
     {
         // Arrange - Using inherited TestLogger with additional context
-        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(Should_Login_With_Valid_Credentials));
-        var loginPage = new LoginPage(Page, _settings, caseLogger);
+        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(Should_Enter_Text_And_Verify_Output));
+        var webElementsPage = new WebElementsPage(Page, _settings, caseLogger);
         
         // Act
-        await loginPage.NavigateAsync();
-        await loginPage.LoginAsync("testuser", "password");
+        await webElementsPage.GoToAsync("/webelements");
+        await webElementsPage.EnterTextInputAsync("test input");
         
-        // Assert - using ILocator for type safety
-        await Expect(loginPage.SuccessMessage).ToBeVisibleAsync();
-        await TakeScreenshotAsync("successful-login");
+        // Assert - using BasePage assertion methods
+        await webElementsPage.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "test input");
+        await TakeScreenshotAsync("text-input-verification");
     }
 
     [Theory]
-    [InlineData(BrowserList.Chromium)]
+    [InlineData(BrowserList.Edge)]
     [InlineData(BrowserList.Firefox)]
     [InlineData(BrowserList.Webkit)]
     public async Task Should_Handle_Cross_Browser_Testing(BrowserList browserType)
@@ -361,18 +361,15 @@ public class LoginTests : BaseUiTest
         // Arrange - Inherited TestLogger with browser context
         var caseLogger = TestLogger.Logger.ForContext("TestMethod", $"{nameof(Should_Handle_Cross_Browser_Testing)}_{browserType}");
         await LaunchBrowserAsync(browserType);
-        var loginPage = new LoginPage(Page, _settings, caseLogger.ForContext("Browser", browserType));
+        var webElementsPage = new WebElementsPage(Page, _settings, caseLogger.ForContext("Browser", browserType));
         
         // Act & Assert
-        await loginPage.NavigateAsync();
-        Assert.True(await loginPage.IsDisplayedAsync());
+        await webElementsPage.GoToAsync("/webelements");
+        await webElementsPage.EnterTextInputAsync("cross-browser test");
         
-        // Use ILocator properties for direct interaction
-        await loginPage.UsernameInput.FillAsync("testuser");
-        await loginPage.PasswordInput.FillAsync("password");
-        await loginPage.LoginButton.ClickAsync();
-        
-        await Expect(loginPage.SuccessMessage).ToBeVisibleAsync();
+        // Verify output using BasePage methods
+        var output = await webElementsPage.GetTextInputOutputAsync();
+        Assert.Contains("cross-browser test", output);
     }
 }
 ```
@@ -654,76 +651,63 @@ $env:Playwright__DefaultTimeoutMs="60000"
 
 ## 🎭 Modern Page Object Model
 
-### ILocator-Based Approach
-The framework uses Playwright's `ILocator` interface directly in Page Objects for better type safety and performance:
+### Selector-Based Approach with BasePage Integration
+The framework uses a simplified selector-based approach that leverages BasePage common methods for consistent error handling and logging:
 
 ```csharp
-public class LoginPage : BasePage
+public class WebElementsPage : BasePage
 {
-    // Locators as ILocator properties - initialized in constructor
-    public ILocator UsernameInput { get; }
-    public ILocator PasswordInput { get; }
-    public ILocator LoginButton { get; }
-    public ILocator ErrorMessage { get; }
+    // Selectors as constants for maintainability
+    private const string TextInputSelector = "#text-input";
+    private const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
+    private const string CounterIncrementButtonSelector = ".web-element-counter button:has-text(\"+\")";
+    private const string DropdownSelector = "#dropdown";
 
-    public LoginPage(IPage page, PlaywrightSettings settings, ILogger logger) 
+    public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
         : base(page, settings, logger)
     {
-        // Initialize locators using Page.Locator()
-        UsernameInput = Page.Locator("#username");
-        PasswordInput = Page.Locator("#password");
-        LoginButton = Page.Locator("button[type='submit']");
-        ErrorMessage = Page.Locator(".flash.error");
+        // No locator initialization needed - selectors used directly
     }
 
-    // Methods use ILocator directly for type safety
-    public async Task<LoginPage> FillUsernameAsync(string username)
-    {
-        await UsernameInput.FillAsync(username);
-        return this;
-    }
+    // Methods use BasePage methods for consistent error handling and logging
+    public async Task EnterTextInputAsync(string text) =>
+        await FillAsync(TextInputSelector, text);
 
-    public async Task<bool> HasErrorMessageAsync()
-    {
-        return await ErrorMessage.IsVisibleAsync();
-    }
+    public async Task<string> GetTextInputOutputAsync() =>
+        await InnerTextAsync(TextInputOutputSelector);
+
+    public async Task ClickCounterIncrementAsync() =>
+        await ClickAsync(CounterIncrementButtonSelector);
+
+    public async Task SelectDropdownAsync(string value) =>
+        await SelectOptionAsync(DropdownSelector, value);
 }
 ```
 
-### Advanced ILocator Features
+### Advanced Selector Patterns
 ```csharp
-public class ProductListPage : BasePage
+public class AdvancedWebElementsPage : BasePage
 {
-    public ILocator ProductCards { get; }
-    public ILocator ProductTitles { get; }
+    // Complex selectors for nested elements
+    private const string CounterValueSelector = ".advanced-counter-section .counter-value";
+    private const string CheckboxSelector = ".advanced-checkbox-section input[type='checkbox']";
 
-    public ProductListPage(IPage page, PlaywrightSettings settings, ILogger logger) 
+    public AdvancedWebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
         : base(page, settings, logger)
     {
-        ProductCards = Page.Locator(".product-card");
-        ProductTitles = Page.Locator(".product-title");
     }
 
-    // Advanced filtering and chaining
-    public async Task SelectProductByNameAsync(string productName)
-    {
-        var productCard = ProductCards.Filter(new() { 
-            Has = ProductTitles.Filter(new() { HasText = productName }) 
-        });
-        await productCard.ClickAsync();
-    }
+    // Index-based element selection using CSS selectors
+    public async Task CheckCheckboxAsync(int index) =>
+        await CheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
 
-    // Index-based selection
-    public async Task SelectFirstProductAsync()
-    {
-        await ProductCards.First().ClickAsync();
-    }
+    // Parameterized selectors for dynamic content
+    public async Task SelectRadioAsync(string value) =>
+        await CheckAsync($".web-element-radio-input[value='{value}']");
 
-    // Nth element selection
-    public async Task SelectProductByIndexAsync(int index)
-    {
-        await ProductCards.Nth(index).ClickAsync();
-    }
+    // Using BasePage assertion methods
+    public async Task AssertTextOutputAsync(string text) =>
+        await AssertOutputContains(TextInputOutputSelector, text);
 }
 ```
 
@@ -742,12 +726,12 @@ public class ProductListPage : BasePage
 - **Cross-browser testing** with Theory attributes and BrowserList enum
 
 ### Page Object Model
-- **ILocator-based approach**: Type-safe element interactions with IntelliSense
-- **Built-in waiting**: Automatic element waiting without explicit waits
-- **Method chaining**: Direct access to `.ClickAsync()`, `.FillAsync()`, `.IsVisibleAsync()`
-- **Advanced filtering**: Use `.Nth()`, `.Filter()`, `.First()`, `.Last()` for complex selections
-- **No string duplication**: Locators defined once in constructor
-- **Better performance**: Playwright optimized locator resolution
+- **Selector-based approach**: Simple CSS selector constants with BasePage method integration
+- **Consistent error handling**: All actions use BasePage methods with standardized logging
+- **Built-in waiting**: Automatic element waiting through Playwright's Page methods
+- **Maintainable selectors**: Centralized selector constants for easy maintenance
+- **Simplified architecture**: No locator initialization overhead
+- **Enhanced debugging**: Detailed logging and error messages for all interactions
 
 ### API Testing
 - **ApiClientFactory pattern** for centralized client configuration

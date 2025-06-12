@@ -68,10 +68,8 @@ namespace atf.Tests.Tests.UI
                 await webElements.EnterTextInputAsync("my first text");
                 await TakeScreenshotAsync("After Input");
 
-                // Assert - using ILocator from page object
-                await Expect(webElements.TextInputOutput).ToContainTextAsync("my first text");
-                //TODO: Implement the assertion in the POM 
-                //await webElements.AssertTextOutputContains("my first text"); // <-- Move assertion to page object
+                // Assert - using BasePage assertion method
+                await webElements.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "my first text");
                 webElements.AssertUrlContains(_settings.BaseUrl);
             }, $"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}");
         }

@@ -167,7 +167,7 @@ namespace atf.UI.Pages
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Failed to check selector '{Selector}'", selector);
+                Logger.Error(ex, "Failed to uncheck selector '{Selector}'", selector);
                 throw;
             }
         }

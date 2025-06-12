@@ -6,115 +6,78 @@ namespace atf.UI.Pages
 {
     public class WebElementsPage : BasePage
     {
-        // Locators as ILocator properties - initialized in constructor
-        public ILocator TextInput { get; }
-        public ILocator TextInputOutput { get; }
-        public ILocator CounterValue { get; }
-        public ILocator CounterIncrementButton { get; }
-        public ILocator CounterDecrementButton { get; }
-        public ILocator CounterResetButton { get; }
-        public ILocator CounterError { get; }
-        public ILocator Dropdown { get; }
-        public ILocator DropdownOutput { get; }
-        public ILocator CheckboxGroup { get; }
-        public ILocator Checkbox { get; }
-        public ILocator CheckboxOutput { get; }
-        public ILocator RadioGroup { get; }
-        public ILocator RadioInput { get; }
-        public ILocator RadioOutput { get; }
-        public ILocator ToggleEnableButton { get; }
-        public ILocator ToggleOutput { get; }
+        // Selectors as constants
+        private const string TextInputSelector = "#text-input";
+        private const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
+        private const string CounterValueSelector = ".web-element-counter-value";
+        private const string CounterIncrementButtonSelector = ".web-element-counter button:has-text(\"+\")";
+        private const string CounterDecrementButtonSelector = ".web-element-counter button:has-text(\"-\")";
+        private const string CounterResetButtonSelector = ".web-element-button-reset";
+        private const string CounterErrorSelector = ".web-element-error";
+        private const string DropdownSelector = "#dropdown";
+        private const string DropdownOutputSelector = ".web-element:has(#dropdown) .web-element-output";
+        private const string CheckboxSelector = ".web-element-checkbox";
+        private const string CheckboxOutputSelector = ".web-element-checkbox-group ~ .web-element-output";
+        private const string RadioOutputSelector = ".web-element-radio-group ~ .web-element-output";
+        private const string ToggleEnableButtonSelector = ".web-element-toggle-button.enabled";
+        private const string ToggleOutputSelector = ".web-element-toggle-group ~ .web-element-output";
 
         public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) : base(page, settings, logger)
         {
-            // Initialize locators using Page.Locator()
-            TextInput = Page.Locator("#text-input");
-            TextInputOutput = Page.Locator(".web-element:has(#text-input) .web-element-output");
-            
-            CounterValue = Page.Locator(".web-element-counter-value");
-            CounterIncrementButton = Page.Locator(".web-element-counter button:has-text(\"+\")");
-            CounterDecrementButton = Page.Locator(".web-element-counter button:has-text(\"-\")");
-            CounterResetButton = Page.Locator(".web-element-button-reset");
-            CounterError = Page.Locator(".web-element-error");
-            
-            Dropdown = Page.Locator("#dropdown");
-            DropdownOutput = Page.Locator(".web-element:has(#dropdown) .web-element-output");
-            
-            CheckboxGroup = Page.Locator(".web-element-checkbox-group");
-            Checkbox = Page.Locator(".web-element-checkbox");
-            CheckboxOutput = Page.Locator(".web-element-checkbox-group ~ .web-element-output");
-            
-            RadioGroup = Page.Locator(".web-element-radio-group");
-            RadioInput = Page.Locator(".web-element-radio-input");
-            RadioOutput = Page.Locator(".web-element-radio-group ~ .web-element-output");
-            
-            ToggleEnableButton = Page.Locator(".web-element-toggle-button.enabled");
-            ToggleOutput = Page.Locator(".web-element-toggle-group ~ .web-element-output");
         }
 
-        // 1. Text Input - using ILocator directly
-        public async Task EnterTextInputAsync(string text)
-        {
-            Logger.Debug("Filling text input with '{Text}'", text);
-            try
-            {
-                await TextInput.FillAsync(text);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Failed to fill text input with '{Text}'", text);
-                throw;
-            }
-        }
+        // 1. Text Input - using BasePage methods
+        public async Task EnterTextInputAsync(string text) =>
+            await FillAsync(TextInputSelector, text);
 
         public async Task<string> GetTextInputOutputAsync() =>
-            await TextInputOutput.InnerTextAsync();
+            await InnerTextAsync(TextInputOutputSelector);
 
-        // 2. Counter - using ILocator methods
+        // 2. Counter - using BasePage methods
         public async Task ClickCounterIncrementAsync() =>
-            await CounterIncrementButton.ClickAsync();
+            await ClickAsync(CounterIncrementButtonSelector);
 
         public async Task ClickCounterDecrementAsync() =>
-            await CounterDecrementButton.ClickAsync();
+            await ClickAsync(CounterDecrementButtonSelector);
 
         public async Task ClickCounterResetAsync() =>
-            await CounterResetButton.ClickAsync();
+            await ClickAsync(CounterResetButtonSelector);
 
         public async Task<string> GetCounterValueAsync() =>
-            await CounterValue.TextContentAsync() ?? "";
+            await GetTextAsync(CounterValueSelector);
 
         public async Task<string> GetCounterErrorAsync() =>
-            await CounterError.TextContentAsync() ?? "";
+            await GetTextAsync(CounterErrorSelector);
 
         // 3. Dropdown
         public async Task SelectDropdownAsync(string value) =>
-            await Dropdown.SelectOptionAsync(value);
+            await SelectOptionAsync(DropdownSelector, value);
 
         public async Task<string> GetDropdownOutputAsync() =>
-            await DropdownOutput.TextContentAsync() ?? "";
+            await GetTextAsync(DropdownOutputSelector);
 
         // 4. Checkbox Options
         public async Task CheckCheckboxAsync(int index) =>
-            await Checkbox.Nth(index).CheckAsync();
+            await CheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
 
         public async Task UncheckCheckboxAsync(int index) =>
-            await Checkbox.Nth(index).UncheckAsync();
+            await UncheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
 
         public async Task<string> GetCheckboxOutputAsync() =>
-            await CheckboxOutput.TextContentAsync() ?? "";
+            await GetTextAsync(CheckboxOutputSelector);
 
         // 5. Radio Buttons
         public async Task SelectRadioAsync(string value) =>
-            await Page.Locator($".web-element-radio-input[value='{value}']").CheckAsync();
+            await CheckAsync($".web-element-radio-input[value='{value}']");
 
         public async Task<string> GetRadioOutputAsync() =>
-            await RadioOutput.TextContentAsync() ?? "";
+            await GetTextAsync(RadioOutputSelector);
 
         // 6. Enable/Disable Toggle
         public async Task ClickToggleEnableAsync() =>
-            await ToggleEnableButton.ClickAsync();
+            await ClickAsync(ToggleEnableButtonSelector);
 
         public async Task<string> GetToggleOutputAsync() =>
-            await ToggleOutput.TextContentAsync() ?? "";
+            await GetTextAsync(ToggleOutputSelector);
     }
 }
