@@ -188,13 +188,30 @@ namespace atf.Tests.Tests.UI
     /// </summary>
     public virtual async Task DisposeAsync()
     {
-        if (Context is not null)
-            await Context.CloseAsync();
-        else if (Browser is not null)
-            await Browser.CloseAsync();
-
-        TestLogger?.Dispose();
-        Page = null;
+        try
+        {
+            // Close in reverse order of creation: Page → Context → Browser
+            if (Page != null)
+            {
+                await Page.CloseAsync();
+                Page = null;
+            }
+            
+            if (Context != null)
+            {
+                await Context.CloseAsync();
+            }
+            
+            if (Browser != null)
+            {
+                await Browser.CloseAsync();
+            }
+        }
+        finally
+        {
+            // Finally block always executes, even if exceptions occur above
+            TestLogger?.Dispose();
+        }
     }
 
     /// <summary>
