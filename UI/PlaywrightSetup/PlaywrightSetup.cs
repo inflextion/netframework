@@ -10,13 +10,13 @@ namespace atf.UI.PlaywrightSetup
     /// </summary>
     public static class PlaywrightLauncher
     {
-        private static readonly PlaywrightSettings _settings;
+        private static readonly PlaywrightSettings Settings;
 
         static PlaywrightLauncher()
         {
             try
             {
-                _settings = ConfigManager.GetSection<PlaywrightSettings>("Playwright");
+                Settings = ConfigManager.GetSection<PlaywrightSettings>("Playwright");
             }
             catch (Exception ex)
             {
@@ -36,25 +36,25 @@ namespace atf.UI.PlaywrightSetup
                 var playwright = await Playwright.CreateAsync();
 
                 // Use override if provided, else use config
-                var browserType = browserTypeOverride ?? _settings.BrowserType;
+                var browserType = browserTypeOverride ?? Settings.BrowserType;
 
                 IBrowser browser = browserType switch
                 {
-                    BrowserList.Firefox => await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = _settings.Headless }),
-                    BrowserList.Webkit => await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = _settings.Headless }),
-                    BrowserList.Chrome => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Channel = "chrome", Headless = _settings.Headless }),
-                    BrowserList.Edge => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Channel = "msedge", Headless = _settings.Headless }),
-                    _ => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = _settings.Headless }),
+                    BrowserList.Firefox => await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = Settings.Headless }),
+                    BrowserList.Webkit => await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = Settings.Headless }),
+                    BrowserList.Chrome => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Channel = "chrome", Headless = Settings.Headless }),
+                    BrowserList.Edge => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Channel = "msedge", Headless = Settings.Headless }),
+                    _ => await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = Settings.Headless }),
                 };
 
                 var context = await browser.NewContextAsync(new BrowserNewContextOptions
                 {
-                    BaseURL = _settings.BaseUrl,
-                    ViewportSize = new ViewportSize { Width = _settings.ViewportWidth, Height = _settings.ViewportHeight }
+                    BaseURL = Settings.BaseUrl,
+                    ViewportSize = new ViewportSize { Width = Settings.ViewportWidth, Height = Settings.ViewportHeight }
                 });
 
                 var page = await context.NewPageAsync();
-                page.SetDefaultTimeout(_settings.DefaultTimeoutMs);
+                page.SetDefaultTimeout(Settings.DefaultTimeoutMs);
                 return page;
             }
             catch (Exception ex)

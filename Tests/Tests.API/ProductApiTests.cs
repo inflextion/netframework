@@ -69,7 +69,7 @@ namespace atf.Tests.Tests.API
         }
 
         [Fact(DisplayName = "Should create product with mixed faker and real data")]
-         [Trait("Category", "API")]
+        [Trait("Category", "API")]
         [AllureSeverity(SeverityLevel.normal)]
         [AllureOwner("QA Team")]
         [AllureTag("POST /api/products")]

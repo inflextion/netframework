@@ -18,7 +18,7 @@ namespace atf.Tests.Tests.UI
     protected ITestOutputHelper OutputHelper { get; private set; }
     protected TestLogger TestLogger { get; private set; }
 
-    public BaseUiTest(ITestOutputHelper output)
+    protected BaseUiTest(ITestOutputHelper output)
     {
         OutputHelper = output;
         TestLogger = new TestLogger(output, GetType().Name, writeToFile: true, browserType: "TBD");

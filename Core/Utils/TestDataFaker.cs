@@ -12,19 +12,6 @@ namespace atf.Core.Utils
         private static readonly Faker _faker = new Faker();
 
         /// <summary>
-        /// Generates a fake user for testing.
-        /// </summary>
-        /// <returns>User with fake data</returns>
-        public static User CreateFakeUser()
-        {
-            return new User
-            {
-                Name = _faker.Name.FullName(),
-                Email = _faker.Internet.Email()
-            };
-        }
-
-        /// <summary>
         /// Generates a fake product for testing.
         /// </summary>
         /// <returns>Product with fake data</returns>
@@ -56,19 +43,7 @@ namespace atf.Core.Utils
                 Price = decimal.Parse(_faker.Commerce.Price(10, 2000))
             };
         }
-
-        /// <summary>
-        /// Creates a fake email address.
-        /// </summary>
-        /// <returns>Random email address</returns>
-        public static string FakeEmail() => _faker.Internet.Email();
-
-        /// <summary>
-        /// Creates a fake full name.
-        /// </summary>
-        /// <returns>Random full name</returns>
-        public static string FakeName() => _faker.Name.FullName();
-
+        
         /// <summary>
         /// Creates a fake product name.
         /// </summary>
@@ -106,5 +81,30 @@ namespace atf.Core.Utils
         /// <param name="sentences">Number of sentences</param>
         /// <returns>Random text</returns>
         public static string FakeText(int sentences = 2) => _faker.Lorem.Sentences(sentences);
+
+        /// <summary>
+        /// Generates a fake user for testing.
+        /// </summary>
+        /// <returns>User with fake data</returns>
+        public static User CreateFakeUser()
+        {
+            return new User
+            {
+                Name = _faker.Name.FullName(),
+                Email = _faker.Internet.Email()
+            };
+        }
+        
+        /// <summary>
+        /// Creates a fake email address.
+        /// </summary>
+        /// <returns>Random email address</returns>
+        public static string FakeEmail() => _faker.Internet.Email();
+
+        /// <summary>
+        /// Creates a fake full name.
+        /// </summary>
+        /// <returns>Random full name</returns>
+        public static string FakeName() => _faker.Name.FullName();
     }
 }

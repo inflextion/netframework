@@ -12,6 +12,8 @@ namespace atf.Core.Logging
     {
         private readonly ILogger _logger;
         private bool _disposed = false;
+        private readonly ITestOutputHelper _testOutputHelper;
+        private readonly string _browserType;
 
         /// <summary>
         /// Creates a new TestLogger instance with test output and optional file logging.
@@ -73,9 +75,6 @@ namespace atf.Core.Logging
             var methodTestName = $"{testMethodName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}";
             return new TestLogger(_testOutputHelper, methodTestName, writeToFile, _browserType);
         }
-
-        private readonly ITestOutputHelper _testOutputHelper;
-        private readonly string _browserType;
 
         // Convenience methods for common logging levels
         public void Information(string messageTemplate, params object[] propertyValues)

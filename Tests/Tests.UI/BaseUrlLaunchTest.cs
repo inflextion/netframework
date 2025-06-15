@@ -53,16 +53,11 @@ namespace atf.Tests.Tests.UI
 
                 AllureHelper.WriteAllureEnvironmentProperties();
                 caseLogger.Information("Test started!");
-
-                var connectionString = ConfigManager.Get<string>("ConnectionStrings:DefaultConnection");
-                if (!string.IsNullOrEmpty(connectionString))
-                {
-                    DbContextFactory.SetConnectionString(connectionString);
-                }
                 var webElements = new WebElementsPage(Page, _settings, caseLogger);
 
                 // Act
                 await webElements.GoToAsync("/webelements");
+                // this will log twice, as we already pass the log in BasePage
                 caseLogger.Information("Navigating to {Url}", Page.Url);
                 await TakeScreenshotAsync($"After navigating to : {Page.Url}");
                 await webElements.EnterTextInputAsync("my first text");
@@ -70,6 +65,7 @@ namespace atf.Tests.Tests.UI
 
                 // Assert - using BasePage assertion method
                 await webElements.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "my first text");
+                //await webElements.AssertOutputContains(WebElementsPage.TextInputOutputSelector, "my first text");
                 webElements.AssertUrlContains(_settings.BaseUrl);
             }, $"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}");
         }

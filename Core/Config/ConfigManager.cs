@@ -19,7 +19,6 @@ namespace atf.Core.Config
         /// </summary>
         public static IConfigurationRoot Configuration => _configuration;
         public static T Get<T>(string key) => _configuration.GetValue<T>(key);
-
         public static T GetSection<T>(string key) where T : new() => _configuration.GetSection(key).Get<T>();
 
     }

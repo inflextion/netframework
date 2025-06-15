@@ -7,20 +7,20 @@ namespace atf.UI.Pages
     public class WebElementsPage : BasePage
     {
         // Selectors as constants
-        private const string TextInputSelector = "#text-input";
-        private const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
-        private const string CounterValueSelector = ".web-element-counter-value";
-        private const string CounterIncrementButtonSelector = ".web-element-counter button:has-text(\"+\")";
-        private const string CounterDecrementButtonSelector = ".web-element-counter button:has-text(\"-\")";
-        private const string CounterResetButtonSelector = ".web-element-button-reset";
-        private const string CounterErrorSelector = ".web-element-error";
-        private const string DropdownSelector = "#dropdown";
-        private const string DropdownOutputSelector = ".web-element:has(#dropdown) .web-element-output";
-        private const string CheckboxSelector = ".web-element-checkbox";
-        private const string CheckboxOutputSelector = ".web-element-checkbox-group ~ .web-element-output";
-        private const string RadioOutputSelector = ".web-element-radio-group ~ .web-element-output";
-        private const string ToggleEnableButtonSelector = ".web-element-toggle-button.enabled";
-        private const string ToggleOutputSelector = ".web-element-toggle-group ~ .web-element-output";
+        public const string TextInputSelector = "#text-input";
+        public const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
+        public const string CounterValueSelector = ".web-element-counter-value";
+        public const string CounterIncrementButtonSelector = ".web-element-counter button:has-text(\"+\")";
+        public const string CounterDecrementButtonSelector = ".web-element-counter button:has-text(\"-\")";
+        public const string CounterResetButtonSelector = ".web-element-button-reset";
+        public const string CounterErrorSelector = ".web-element-error";
+        public const string DropdownSelector = "#dropdown";
+        public const string DropdownOutputSelector = ".web-element:has(#dropdown) .web-element-output";
+        public const string CheckboxSelector = ".web-element-checkbox";
+        public const string CheckboxOutputSelector = ".web-element-checkbox-group ~ .web-element-output";
+        public const string RadioOutputSelector = ".web-element-radio-group ~ .web-element-output";
+        public const string ToggleEnableButtonSelector = ".web-element-toggle-button.enabled";
+        public const string ToggleOutputSelector = ".web-element-toggle-group ~ .web-element-output";
 
         public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) : base(page, settings, logger)
         {

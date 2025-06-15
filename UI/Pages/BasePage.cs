@@ -54,7 +54,7 @@ namespace atf.UI.Pages
             Logger.Debug("Filling '{Selector}' with '{Text}'", selector, text);
             try
             {
-                await Page.FillAsync(selector, text);
+                await Page.Locator(selector).FillAsync(text);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace atf.UI.Pages
             Logger.Debug("Clicking '{Selector}'", selector);
             try
             {
-                await Page.ClickAsync(selector);
+                await Page.Locator(selector).ClickAsync();
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace atf.UI.Pages
         {
             try
             {
-                await Page.CheckAsync(selector);
+                await Page.Locator(selector).CheckAsync();
             }
             catch (Exception ex)
             {
@@ -163,7 +163,7 @@ namespace atf.UI.Pages
         {
             try
             {
-                await Page.UncheckAsync(selector);
+                await Page.Locator(selector).UncheckAsync();
             }
             catch (Exception ex)
             {
@@ -176,7 +176,7 @@ namespace atf.UI.Pages
         {
             try
             {
-                await Page.SelectOptionAsync(selector, value);
+                await Page.Locator(selector).SelectOptionAsync(value);
             }
             catch (Exception ex)
             {
@@ -185,26 +185,26 @@ namespace atf.UI.Pages
             }
         }
         
-       /// <summary>
-               /// Selects multiple options in a select element.
-               /// </summary>
-               /// <param name="selector">The selector for the select element.</param>
-               /// <param name="values">
-               /// The values to select. To select multiple options, pass them as a string array, e.g.:
-               /// <code>
-               /// await page.SelectOptionsAsync("#mySelect", "value1", "value2", "value3");
-               /// </code>
-               /// </param>
-               /// /// You can also use a string array:
-               /// <code>
-               /// string[] values = { "Option1", "Option2" };
-               /// await page.SelectOptionsAsync("#mySelect", values);
-               /// </code>
+        /// <summary>
+        /// Selects multiple options in a select element.
+        /// </summary>
+        /// <param name="selector">The selector for the select element.</param>
+        /// <param name="values">
+        /// The values to select. To select multiple options, pass them as a string array, e.g.:
+        /// <code>
+        /// await page.SelectOptionsAsync("#mySelect", "value1", "value2", "value3");
+        /// </code>
+        /// </param>
+        /// /// You can also use a string array:
+        /// <code>
+        /// string[] values = { "Option1", "Option2" };
+        /// await page.SelectOptionsAsync("#mySelect", values);
+        /// </code>
         protected async Task SelectOptionsAsync(string selector, params string[] values)
         {
             try
             {
-                await Page.SelectOptionAsync(selector, values);
+                await Page.Locator(selector).SelectOptionAsync(values);
             }
             catch (Exception ex)
             {
