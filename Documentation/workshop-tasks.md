@@ -656,59 +656,7 @@ public static class WaitHelper
 
 ---
 
-### Task 4.2: Create a Performance Monitor
-**Objective:** Learn about performance testing basics
-**Time:** 50 minutes
-
-Build a utility to measure and report test performance.
-
-**Instructions:**
-1. Create `Core/Utils/PerformanceMonitor.cs`
-2. Implement timing and metrics:
-```csharp
-public class PerformanceMonitor
-{
-    private readonly Dictionary<string, TimeSpan> _measurements = new();
-    private readonly ILogger _logger;
-    
-    public PerformanceMonitor(ILogger logger)
-    {
-        _logger = logger;
-    }
-    
-    public async Task<T> MeasureAsync<T>(string operationName, Func<Task<T>> operation)
-    {
-        // TODO: Start timing
-        // TODO: Execute operation
-        // TODO: Stop timing and store result
-        // TODO: Log performance metrics
-        // TODO: Return operation result
-        
-        throw new NotImplementedException();
-    }
-    
-    public void LogSummary()
-    {
-        // TODO: Log all measurements
-        // TODO: Identify slowest operations
-        // TODO: Calculate averages if multiple measurements
-    }
-    
-    // TODO: Add methods for memory usage monitoring
-    // TODO: Add methods for page load time measurement
-}
-```
-3. Integrate into your tests to measure critical operations
-
-**What you'll learn:**
-- Performance measurement
-- Stopwatch and timing
-- Metrics collection
-- Performance analysis
-
----
-
-### Task 4.3: Build a Test Report Enhancer
+### Task 4.2: Build a Test Report Enhancer
 **Objective:** Create custom test reporting and analytics
 **Time:** 60 minutes
 
@@ -761,19 +709,14 @@ public static class TestReportEnhancer
 
 ---
 
-## 🏆 Bonus Challenges
+## Major Refactor: Adopt Playwright GetBy Methods in Page Objects
 
-### Bonus 1: Create a Database Seeder
-Build a utility that populates the test database with realistic sample data for complex scenarios.
-
-### Bonus 2: Implement Page Object Generator
-Create a tool that analyzes a webpage and generates Page Object Model classes automatically.
-
-### Bonus 3: Build a Test Result Analyzer
-Create a utility that analyzes test results over time and identifies patterns in failures.
-
-### Bonus 4: Create Mobile Test Support
-Extend the framework to support mobile testing with device emulation.
+- Refactor all UI Page Object Model (POM) classes to use Playwright's GetBy methods (e.g., GetByLabel, GetByRole) instead of string selector constants for element location.
+- For each UI element, define a property or method that returns an ILocator using the appropriate GetBy method.
+- Update all page methods to use these new properties/methods for element interaction.
+- Update tests to use the new POM methods as needed.
+- Document the new approach in the project documentation (see playwright-getby-methods.md for examples and summary table).
+- Ensure all tests pass after the refactor.
 
 ---
 
