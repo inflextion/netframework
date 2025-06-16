@@ -16,9 +16,6 @@ namespace atf.Tests.Tests.UI
 {
     [AllureSuite("BaseTests")]
     [AllureFeature("WebElements")]
-    /// <summary>
-    /// Smoke test to verify that PlaywrightLauncher launches the configured BaseUrl and a basic textinput validation.
-    /// </summary>
     public class BaseUrlLaunchTest : BaseUiTest
     {
 
@@ -30,6 +27,9 @@ namespace atf.Tests.Tests.UI
             _output = output;
         }
 
+        /// <summary>
+        /// Smoke test to verify that PlaywrightLauncher launches the configured BaseUrl and a basic textinput validation.
+        /// </summary>
         [Theory]
         [InlineData(BrowserList.Edge)]
         [InlineData(BrowserList.Firefox)]

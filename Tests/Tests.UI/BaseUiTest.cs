@@ -1,6 +1,7 @@
 ﻿using Allure.Net.Commons;
 using atf.Core.Enums;
 using atf.Core.Logging;
+using atf.Tests.Helpers;
 using atf.UI.PlaywrightSetup;
 using Microsoft.Playwright;
 using Serilog;
@@ -27,29 +28,15 @@ namespace atf.Tests.Tests.UI
 
     protected async Task<string> TakeScreenshotAsync(string name, bool fullPage = true)
     {
-        // Sanitize the name to remove invalid filename characters
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var safeName = string.Join("_", name.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries)).Trim('_');
-        var path = Path.Combine("Screenshots", $"{safeName}-{DateTime.UtcNow:yyyyMMdd-HHmmss}.png");
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            var bytes = await Page.ScreenshotAsync(new() { FullPage = fullPage });
-            await File.WriteAllBytesAsync(path, bytes);
-
-            AllureApi.AddAttachment(
-                name: "Failure_Screenshot",
-                type: "image/png",
-                content: bytes,
-                fileExtension: "png"
-            );
-
+            var path = await ScreenshotHelper.TakeScreenshotAsync(Page, name, fullPage);
             TestLogger.Information("Saved screenshot: {Path}", path);
             return path;
         }
         catch (Exception ex)
         {
-            TestLogger.Error(ex, "Failed to take or save screenshot to {Path}", path);
+            TestLogger.Error(ex, "Failed to take or save screenshot");
             throw;
         }
     }
@@ -58,8 +45,7 @@ namespace atf.Tests.Tests.UI
     {
         try
         {
-            var screenshot = await element.ScreenshotAsync();
-            AllureApi.AddAttachment(name, "image/png", screenshot);
+            await ScreenshotHelper.TakeElementScreenshotAsync(element, name);
         }
         catch (Exception ex)
         {
@@ -67,73 +53,15 @@ namespace atf.Tests.Tests.UI
         }
     }
 
-    /// <summary>
-    /// Handles popup windows by waiting for them and executing actions
-    /// </summary>
-    protected async Task<T> HandlePopupAsync<T>(Func<Task> triggerAction, Func<IPage, Task<T>> popupAction)
-    {
-        TestLogger.Information("Setting up popup handler");
-        
-        // Set up popup handler before triggering action
-        var popupTask = Context.WaitForPageAsync();
-        
-        // Execute the action that triggers the popup
-        await triggerAction();
-        
-        // Wait for popup and execute actions on it
-        var popup = await popupTask;
-        TestLogger.Information("Popup opened: {Url}", popup.Url);
-        
-        try
-        {
-            var result = await popupAction(popup);
-            return result;
-        }
-        finally
-        {
-            await popup.CloseAsync();
-            TestLogger.Information("Popup closed");
-        }
-    }
+    // Use PlaywrightHelpers for popup and dialog handling
+    protected Task<T> HandlePopupAsync<T>(Func<Task> triggerAction, Func<IPage, Task<T>> popupAction)
+        => PlaywrightHelpers.HandlePopupAsync(Context, TestLogger, triggerAction, popupAction);
 
-    /// <summary>
-    /// Handles popup windows without return value
-    /// </summary>
-    protected async Task HandlePopupAsync(Func<Task> triggerAction, Func<IPage, Task> popupAction)
-    {
-        await HandlePopupAsync(triggerAction, async popup =>
-        {
-            await popupAction(popup);
-            return true; // Dummy return value
-        });
-    }
+    protected Task HandlePopupAsync(Func<Task> triggerAction, Func<IPage, Task> popupAction)
+        => PlaywrightHelpers.HandlePopupAsync(Context, TestLogger, triggerAction, popupAction);
 
-    /// <summary>
-    /// Handles JavaScript alerts, confirms, and prompts
-    /// </summary>
-    protected async Task HandleDialogAsync(Func<Task> triggerAction, bool accept = true, string promptText = null)
-    {
-        TestLogger.Information("Setting up dialog handler - Accept: {Accept}", accept);
-        
-        Page.Dialog += async (_, dialog) =>
-        {
-            TestLogger.Information("Dialog appeared: Type={Type}, Message='{Message}'", dialog.Type, dialog.Message);
-            
-            if (accept)
-            {
-                if (!string.IsNullOrEmpty(promptText))
-                    await dialog.AcceptAsync(promptText);
-                else
-                    await dialog.AcceptAsync();
-            }
-            else
-            {
-                await dialog.DismissAsync();
-            }
-        };
-        
-        await triggerAction();
-    }
+    protected Task HandleDialogAsync(Func<Task> triggerAction, bool accept = true, string promptText = null)
+        => PlaywrightHelpers.HandleDialogAsync(Page, TestLogger, triggerAction, accept, promptText);
 
     /// <summary>
     /// Executes a test action and automatically takes a screenshot if the test fails.

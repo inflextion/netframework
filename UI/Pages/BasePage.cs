@@ -18,6 +18,9 @@ namespace atf.UI.Pages
             Logger = logger;
         }
 
+        /// <summary>
+        /// Navigates to the specified relative URL using the base URL from settings.
+        /// </summary>
         public async Task GoToAsync(string relativeUrl)
         {
             var url = $"{Settings.BaseUrl.TrimEnd('/')}/{relativeUrl.TrimStart('/')}";
@@ -35,6 +38,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Waits for the page to finish loading (network idle and DOM content loaded).
+        /// </summary>
         public async Task WaitForPageLoadAsync(int timeoutMs = 30_000)
         {
             try
@@ -49,6 +55,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Fills the specified selector with the provided text.
+        /// </summary>
         protected async Task FillAsync(string selector, string text)
         {
             Logger.Debug("Filling '{Selector}' with '{Text}'", selector, text);
@@ -63,6 +72,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Clicks the element specified by the selector.
+        /// </summary>
         protected async Task ClickAsync(string selector)
         {
             Logger.Debug("Clicking '{Selector}'", selector);
@@ -77,6 +89,9 @@ namespace atf.UI.Pages
             }
         }
         
+        /// <summary>
+        /// Asserts that the text content of the selector contains the expected text.
+        /// </summary>
         public async Task AssertOutputContains(string selector, string expectedText)
         {
             try
@@ -92,6 +107,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Asserts that the current page URL contains the specified segment.
+        /// </summary>
         public void AssertUrlContains(string segment)
         {
             try
@@ -106,6 +124,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Evaluates JavaScript in the context of the page and returns the result.
+        /// </summary>
         protected async Task<T> EvalAsync<T>(string script, params object[] args)
         {
             try
@@ -119,6 +140,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Waits for the specified selector to become visible on the page.
+        /// </summary>
         protected async Task WaitForVisibleAsync(string selector, int timeoutMs = 5000)
         {
             try
@@ -133,6 +157,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Gets the text content of the specified selector.
+        /// </summary>
         protected async Task<string> GetTextAsync(string selector)
         {
             try
@@ -146,6 +173,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Checks (selects) the checkbox or radio button specified by the selector.
+        /// </summary>
         protected async Task CheckAsync(string selector)
         {
             try
@@ -159,6 +189,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Unchecks (deselects) the checkbox specified by the selector.
+        /// </summary>
         protected async Task UncheckAsync(string selector)
         {
             try
@@ -172,6 +205,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Selects a single option in a select element by value.
+        /// </summary>
         protected async Task SelectOptionAsync(string selector, string value)
         {
             try
@@ -186,20 +222,10 @@ namespace atf.UI.Pages
         }
         
         /// <summary>
-        /// Selects multiple options in a select element.
+        /// Selects multiple options in a select element by their values.
         /// </summary>
         /// <param name="selector">The selector for the select element.</param>
-        /// <param name="values">
-        /// The values to select. To select multiple options, pass them as a string array, e.g.:
-        /// <code>
-        /// await page.SelectOptionsAsync("#mySelect", "value1", "value2", "value3");
-        /// </code>
-        /// </param>
-        /// /// You can also use a string array:
-        /// <code>
-        /// string[] values = { "Option1", "Option2" };
-        /// await page.SelectOptionsAsync("#mySelect", values);
-        /// </code>
+        /// <param name="values">The values to select.</param>
         protected async Task SelectOptionsAsync(string selector, params string[] values)
         {
             try
@@ -213,6 +239,9 @@ namespace atf.UI.Pages
             }
         }
 
+        /// <summary>
+        /// Gets the inner text of the specified selector.
+        /// </summary>
         protected async Task<string> InnerTextAsync(string selector)
         {
             try
