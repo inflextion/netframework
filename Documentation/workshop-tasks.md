@@ -543,6 +543,66 @@ public static class TestDataFactory
 
 ---
 
+### Task 3.4: Implement Generic AllureHelper Method
+**Objective:** Refactor AllureHelper to support any API model type
+**Time:** 30 minutes
+
+Make the AllureHelper.AttachString method generic to work with any API request model, not just ProductRequest.
+
+**Current Problem:**
+The `AllureHelper.AttachString(string name, ProductRequest request)` method in `/Tests/Helpers/AllureHelper.cs:33` is hardcoded to only accept ProductRequest objects, limiting its reusability with other API models like LoginRequest.
+
+**Instructions:**
+1. Open `Tests/Helpers/AllureHelper.cs`
+2. Replace the ProductRequest-specific method with a generic version:
+```csharp
+/// <summary>
+/// Serializes any object and attaches it as a JSON body to the Allure report.
+/// </summary>
+/// <param name="name">The name of the attachment.</param>
+/// <param name="requestModel">The object to serialize and attach.</param>
+public static void AttachString<T>(string name, T requestModel) where T : class
+{
+    AllureApi.Step($"Attach: {name}", () =>
+    {
+        AllureApi.AddAttachment("Request Body", "application/json", 
+            Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(requestModel)));
+    });
+}
+```
+3. **Optional Enhancement:** Use the existing JsonHelper instead of JsonConvert for consistency:
+```csharp
+public static void AttachString<T>(string name, T requestModel) where T : class
+{
+    AllureApi.Step($"Attach: {name}", () =>
+    {
+        var jsonContent = JsonHelper.Serialize(requestModel);
+        AllureApi.AddAttachment("Request Body", "application/json", 
+            Encoding.UTF8.GetBytes(jsonContent));
+    });
+}
+```
+4. Update any existing test usage in `Tests/Tests.API/ProductApiTests.cs` to ensure compatibility
+5. Test the generic method with different API models:
+   - ProductRequest
+   - LoginRequest  
+   - Any other API model classes
+
+**What you'll learn:**
+- Generic methods with type constraints (`where T : class`)
+- Code reusability principles
+- Method overloading vs. generics
+- Consistent use of framework utilities
+- Refactoring for maintainability
+
+**Expected Results:**
+✅ Method accepts any class object type  
+✅ Existing ProductRequest usage continues to work  
+✅ New API models can use the same attachment method  
+✅ Consistent JSON serialization across the framework
+
+---
+
 ## 🎯 Level 4: Advanced Challenges (Intermediate-Advanced)
 
 ### Task 4.1: Build a Smart Wait Helper
