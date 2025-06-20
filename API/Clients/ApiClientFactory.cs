@@ -19,7 +19,7 @@ namespace atf.API.Clients
             return clientType switch
             {
                 ApiClientType.Product => new ProductApiClient(restClient),
-                ApiClientType.User => new UserApiClient(restClient),
+                ApiClientType.Analytics => new AnalyticsClient(restClient),
                 _ => throw new ArgumentException($"Unsupported client type: {clientType}")
             };
         }
@@ -35,9 +35,9 @@ namespace atf.API.Clients
         /// <summary>
         /// Convenience method for creating User API client
         /// </summary>
-        public static IApiClient CreateUserClient()
+        public static IApiClient CreateAnalyticsClient()
         {
-            return CreateClient(ApiClientType.User);
+            return CreateClient(ApiClientType.Analytics);
         }
 
         /// <summary>

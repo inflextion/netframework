@@ -10,6 +10,7 @@ using atf.Data.DatabaseContext;
 using Serilog;
 using atf.Tests.Helpers;
 using atf.Core.Enums;
+using atf.Tests.Base.UI;
 
 
 namespace atf.Tests.Tests.UI
@@ -45,11 +46,11 @@ namespace atf.Tests.Tests.UI
             var caseLogger = TestLogger.Logger.ForContext("Browser", browserType)
                                              .ForContext("TestMethod", nameof(Should_Launch_BaseUrl));
             
-            await RunTestWithScreenshotOnFailure(async () =>
-            {
+            // await RunTestWithScreenshotOnFailure(async () =>
+            // {
                 // Arrange
                 // Launch browser with specific type for this test
-                await LaunchBrowserAsync(browserType);
+                await LaunchBrowserAsync(browserType, recordVideo: true);
 
                 AllureHelper.WriteAllureEnvironmentProperties();
                 caseLogger.Information("Test started!");
@@ -67,7 +68,7 @@ namespace atf.Tests.Tests.UI
                 await webElements.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "my first text");
                 //await webElements.AssertOutputContains(WebElementsPage.TextInputOutputSelector, "my first text");
                 webElements.AssertUrlContains(_settings.BaseUrl);
-            }, $"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}");
+            // }, $"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}");
         }
     }
 }

@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace atf.Data.Repositories
 {
     /// <summary>
-    /// Repository for managing <see cref="Product"/> entities in the database.
+    /// Repository for managing <see cref="ProductEntity"/> entities in the database.
     /// Provides methods for full CRUD operations including create, retrieve, update, delete, and search functionality.
     /// </summary>
     public class ProductRepository : IProductRepository
     {
-        public Product Create(Product product)
+        public ProductEntity Create(ProductEntity product)
         {
             using var context = DbContextFactory.CreateContext();
             context.Products.Add(product);
@@ -22,19 +22,19 @@ namespace atf.Data.Repositories
             return product;
         }
 
-        public Product GetById(int id)
+        public ProductEntity GetById(int id)
         {
             using var context = DbContextFactory.CreateContext();
             return context.Products.Find(id);
         }
 
-        public List<Product> GetActive()
+        public List<ProductEntity> GetActive()
         {
             using var context = DbContextFactory.CreateContext();
             return context.Products.Where(p => p.IsActive).ToList();
         }
 
-        public List<Product> SearchByName(string name)
+        public List<ProductEntity> SearchByName(string name)
         {
             using var context = DbContextFactory.CreateContext();
             return context.Products
@@ -42,7 +42,7 @@ namespace atf.Data.Repositories
                 .ToList();
         }
 
-        public Product Update(Product product)
+        public ProductEntity Update(ProductEntity product)
         {
             using var context = DbContextFactory.CreateContext();
             context.Products.Update(product);

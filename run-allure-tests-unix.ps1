@@ -21,7 +21,7 @@ Remove-Item -Recurse -Force $rootResults -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force $allureReport -ErrorAction SilentlyContinue
 
 # Step 3: Run your xUnit tests (no logger for Allure)
-dotnet test atf.csproj --filter Category=Smoke
+dotnet test atf.csproj
 
 # Step 4: Move allure-results from build output to root
 $buildResults = "bin/Debug/net9.0/allure-results"

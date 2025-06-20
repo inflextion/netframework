@@ -9,11 +9,11 @@ namespace atf.Data.Repositories
 {
     public interface IProductRepository
     {
-        Product Create(Product product);
-        Product GetById(int id);
-        List<Product> GetActive();
-        List<Product> SearchByName(string name);
-        Product Update(Product product);
+        ProductEntity Create(ProductEntity product);
+        ProductEntity GetById(int id);
+        List<ProductEntity> GetActive();
+        List<ProductEntity> SearchByName(string name);
+        ProductEntity Update(ProductEntity product);
         void Delete(int id);
     }
 }

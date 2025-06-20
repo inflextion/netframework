@@ -1,15 +1,11 @@
-﻿using Allure.Net.Commons;
-using atf.Core.Enums;
+﻿using atf.Core.Enums;
 using atf.Core.Logging;
 using atf.Tests.Helpers;
 using atf.UI.PlaywrightSetup;
 using Microsoft.Playwright;
-using Serilog;
-using System.Runtime.CompilerServices;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
-namespace atf.Tests.Tests.UI
+namespace atf.Tests.Base.UI
 {
     public abstract class BaseUiTest : IAsyncLifetime, IDisposable
 {
@@ -95,7 +91,8 @@ namespace atf.Tests.Tests.UI
     /// Call this method in tests that need a specific browser.
     /// </summary>
     /// <param name="browserType">The browser type to launch</param>
-    protected async Task LaunchBrowserAsync(BrowserList browserType)
+    /// <param name="recordVideo">Whether to record video for this browser session</param>
+    protected async Task LaunchBrowserAsync(BrowserList browserType, bool recordVideo = false)
     {
         // Properly close existing browser resources
         if (Page?.Context is not null)
@@ -104,11 +101,11 @@ namespace atf.Tests.Tests.UI
         if (Page?.Context?.Browser is not null)
             await Page.Context.Browser.CloseAsync();
 
-        // Launch new page with specified browser
-        Page = await PlaywrightLauncher.LaunchAsync(browserType);
+        // Launch new page with specified browser and video recording option
+        Page = await PlaywrightLauncher.LaunchAsync(browserType, recordVideo);
         
         // Browser context will be added via ForContext() in individual tests
-        TestLogger.Information("Browser launched: {BrowserType}", browserType);
+        TestLogger.Information($"Browser launched: {browserType}, RecordVideo: {recordVideo}", browserType, recordVideo);
     }
 
     /// <summary>

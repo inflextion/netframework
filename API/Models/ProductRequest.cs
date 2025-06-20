@@ -1,10 +1,11 @@
-﻿namespace atf.API.Models
+﻿using System.Text.Json.Serialization;
+using Azure.Core.Serialization;
+
+namespace atf.API.Models
 {
-    public class ProductRequest
+    public class ProductRequest : Product
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = default!;
-        public string Category { get; set; } = default!;
+        [JsonPropertyName("price")]
         public decimal Price { get; set; }
     }
 }

@@ -1,0 +1,37 @@
+Index: Tests/Tests.UI/BaseUrlLaunchTest.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Xunit.Abstractions;\nusing atf.Core.Config;\nusing atf.Core.Models;\nusing atf.UI.Pages;\nusing Microsoft.Playwright;\nusing static Microsoft.Playwright.Assertions;\nusing Allure.Xunit.Attributes;\nusing Allure.Net.Commons;\nusing atf.Data.DatabaseContext;\nusing Serilog;\nusing atf.Tests.Helpers;\nusing atf.Core.Enums;\n\n\nnamespace atf.Tests.Tests.UI\n{\n    [AllureSuite(\"BaseTests\")]\n    [AllureFeature(\"WebElements\")]\n    /// <summary>\n    /// Smoke test to verify that PlaywrightLauncher launches the configured BaseUrl and a basic textinput validation.\n    /// </summary>\n    public class BaseUrlLaunchTest : BaseUiTest\n    {\n\n        private readonly PlaywrightSettings _settings;\n        private readonly ITestOutputHelper _output;\n        public BaseUrlLaunchTest(ITestOutputHelper output) : base(output) // <-- Pass to base class!\n        {\n            _settings = ConfigManager.GetSection<PlaywrightSettings>(\"Playwright\");\n            _output = output;\n        }\n\n        [Theory]\n        [InlineData(BrowserList.Edge)]\n        [InlineData(BrowserList.Firefox)]\n        [InlineData(BrowserList.Webkit)]\n        [AllureSeverity(SeverityLevel.critical)]\n        [AllureOwner(\"QA Team\")]\n        [Trait(\"Category\", \"Smoke\")]\n        [Trait(\"Priority\", \"High\")]\n        [AllureTag(\"smoke\", \"login\")]\n        public async Task Should_Launch_BaseUrl(BrowserList browserType)\n        {\n            // Use inherited TestLogger with additional context\n            var caseLogger = TestLogger.Logger.ForContext(\"Browser\", browserType)\n                                             .ForContext(\"TestMethod\", nameof(Should_Launch_BaseUrl));\n            \n            await RunTestWithScreenshotOnFailure(async () =>\n            {\n                // Arrange\n                // Launch browser with specific type for this test\n                await LaunchBrowserAsync(browserType);\n\n                AllureHelper.WriteAllureEnvironmentProperties();\n                caseLogger.Information(\"Test started!\");\n                var webElements = new WebElementsPage(Page, _settings, caseLogger);\n\n                // Act\n                await webElements.GoToAsync(\"/webelements\");\n                // this will log twice, as we already pass the log in BasePage\n                caseLogger.Information(\"Navigating to {Url}\", Page.Url);\n                await TakeScreenshotAsync($\"After navigating to : {Page.Url}\");\n                await webElements.EnterTextInputAsync(\"my first text\");\n                await TakeScreenshotAsync(\"After Input\");\n\n                // Assert - using BasePage assertion method\n                await webElements.AssertOutputContains(\".web-element:has(#text-input) .web-element-output\", \"my first text\");\n                //await webElements.AssertOutputContains(WebElementsPage.TextInputOutputSelector, \"my first text\");\n                webElements.AssertUrlContains(_settings.BaseUrl);\n            }, $\"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}\");\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Tests/Tests.UI/BaseUrlLaunchTest.cs b/Tests/Tests.UI/BaseUrlLaunchTest.cs
+--- a/Tests/Tests.UI/BaseUrlLaunchTest.cs	(revision f7f0d2b2aa9bc7d90cdec13625c74e3de81e5be9)
++++ b/Tests/Tests.UI/BaseUrlLaunchTest.cs	(date 1750177014607)
+@@ -2,23 +2,19 @@
+ using atf.Core.Config;
+ using atf.Core.Models;
+ using atf.UI.Pages;
+-using Microsoft.Playwright;
+-using static Microsoft.Playwright.Assertions;
+ using Allure.Xunit.Attributes;
+ using Allure.Net.Commons;
+-using atf.Data.DatabaseContext;
+-using Serilog;
+ using atf.Tests.Helpers;
+ using atf.Core.Enums;
+ 
+ 
+ namespace atf.Tests.Tests.UI
+ {
+-    [AllureSuite("BaseTests")]
+-    [AllureFeature("WebElements")]
+     /// <summary>
+-    /// Smoke test to verify that PlaywrightLauncher launches the configured BaseUrl and a basic textinput validation.
++    /// Smoke test to verify that PlaywrightLauncher launches the configured BaseUrl and a basic text-input validation.
+     /// </summary>
++    [AllureSuite("BaseTests")]
++    [AllureFeature("WebElements")]
+     public class BaseUrlLaunchTest : BaseUiTest
+     {
+ 

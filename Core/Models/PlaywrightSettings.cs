@@ -14,5 +14,6 @@ namespace atf.Core.Models
         public int DefaultTimeoutMs { get; set; } = 30000;
         public int ViewportWidth { get; set; } = 1280;
         public int ViewportHeight { get; set; } = 800;
+        public int SlowMoMs { get; set; } = 3000; 
     }
 }

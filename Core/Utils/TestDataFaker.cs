@@ -15,11 +15,11 @@ namespace atf.Core.Utils
         /// Generates a fake product for testing.
         /// </summary>
         /// <returns>Product with fake data</returns>
-        public static Product CreateFakeProduct()
+        public static ProductEntity CreateFakeProduct()
         {
             var categories = new[] { "Laptops", "Phones", "Accessories", "Tablets" };
             
-            return new Product
+            return new ProductEntity
             {
                 Name = _faker.Commerce.ProductName(),
                 Price = decimal.Parse(_faker.Commerce.Price(10, 2000)),

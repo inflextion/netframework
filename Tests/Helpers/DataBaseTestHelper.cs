@@ -30,9 +30,9 @@ namespace atf.Tests.Helpers
             return _userRepository.Create(user);
         }
 
-        public static Product CreateTestProduct(string name = "Test Product", decimal price = 99.99m, bool isActive = true)
+        public static ProductEntity CreateTestProduct(string name = "Test Product", decimal price = 99.99m, bool isActive = true)
         {
-            var product = new Product
+            var product = new ProductEntity
             {
                 Name = name,
                 Price = price,
@@ -53,7 +53,7 @@ namespace atf.Tests.Helpers
         /// <summary>
         /// Creates a test product with fake data.
         /// </summary>
-        public static Product CreateFakeProduct()
+        public static ProductEntity CreateFakeProduct()
         {
             var fakeProduct = TestDataFaker.CreateFakeProduct();
             return _productRepository.Create(fakeProduct);
@@ -64,12 +64,12 @@ namespace atf.Tests.Helpers
             return _userRepository.GetByEmail(email);
         }
 
-        public static List<Product> GetActiveProducts()
+        public static List<ProductEntity> GetActiveProducts()
         {
             return _productRepository.GetActive();
         }
 
-        public static List<Product> SearchProducts(string searchTerm)
+        public static List<ProductEntity> SearchProducts(string searchTerm)
         {
             return _productRepository.SearchByName(searchTerm);
         }

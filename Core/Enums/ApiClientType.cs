@@ -11,7 +11,7 @@ public enum ApiClientType
     Product,
     
     /// <summary>
-    /// User management and authentication API client
+    /// Analytics API client
     /// </summary>
-    User
+    Analytics
 }

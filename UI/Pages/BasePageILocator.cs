@@ -5,13 +5,13 @@ using atf.Core.Models;
 
 namespace atf.UI.Pages
 {
-    public abstract class BasePage
+    public abstract class BasePageILocator
     {
         protected IPage Page { get; }
         protected PlaywrightSettings Settings { get; }
         protected ILogger Logger { get; }
 
-        protected BasePage(IPage page, PlaywrightSettings settings, ILogger logger)
+        protected BasePageILocator(IPage page, PlaywrightSettings settings, ILogger logger)
         {
             Page = page;
             Settings = settings;
@@ -58,16 +58,16 @@ namespace atf.UI.Pages
         /// <summary>
         /// Fills the specified selector with the provided text.
         /// </summary>
-        protected async Task FillAsync(string locator, string text)
+        protected async Task FillAsync(ILocator selector, string text)
         {
-            Logger.Debug("Filling '{Locator}' with '{Text}'", locator, text);
+            Logger.Debug("Filling '{Selector}' with '{Text}'", selector, text);
             try
             {
-                await Page.Locator(locator).FillAsync(text);
+                await selector.FillAsync(text);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Failed to fill selector '{Locator}' with '{Text}'", locator, text);
+                Logger.Error(ex, "Failed to fill selector '{Selector}' with '{Text}'", selector, text);
                 throw;
             }
         }
@@ -75,16 +75,16 @@ namespace atf.UI.Pages
         /// <summary>
         /// Clicks the element specified by the selector.
         /// </summary>
-        protected async Task ClickAsync(string locator)
+        protected async Task ClickAsync(ILocator selector)
         {
-            Logger.Debug("Clicking '{Selector}'", locator);
+            Logger.Debug("Clicking '{Selector}'", selector);
             try
             {
-                await Page.Locator(locator).ClickAsync();
+                await selector.ClickAsync();
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Failed to click selector '{Selector}'", locator);
+                Logger.Error(ex, "Failed to click selector '{Selector}'", selector);
                 throw;
             }
         }

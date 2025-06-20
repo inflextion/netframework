@@ -2,7 +2,7 @@
 # Launches Playwright UI recorder for test generation
 
 param(
-    [string]$Url = "",
+    [string]$Url = "http://localhost:3000/form",
     [string]$Browser = "chromium",
     [string]$Device = "",
     [string]$ViewportSize = "",

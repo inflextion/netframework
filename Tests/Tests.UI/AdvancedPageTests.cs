@@ -3,6 +3,7 @@ using atf.Core.Config;
 using atf.Core.Models;
 using atf.UI.Pages;
 using Allure.Xunit.Attributes;
+using atf.Tests.Base.UI;
 using Serilog;
 using atf.Tests.Helpers;
 
