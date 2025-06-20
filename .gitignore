@@ -18,6 +18,9 @@ bld/
 *.userosscache
 *.sln.docstates
 
+# JetBrains Rider files
+.idea/
+
 # User-specific files
 *.rsuser
 *.suo
