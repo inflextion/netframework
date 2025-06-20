@@ -55,3 +55,6 @@ reports/archive/
 
 # Test execution logs
 logs/reportsallure-report/
+
+# Exclude old CMD scripts in favor of PowerShell scripts
+*.cmd

@@ -6,28 +6,29 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 
 ## 🚀 Features
 
-- **Multi-Layer Testing**: API, UI, and Database test support
+- **Multi-Layer Testing**: API, UI, and Database test support with integrated analytics testing
 - **Cross-Browser Testing**: Playwright integration with Chrome, Firefox, Safari, and Edge
-- **Modern Page Object Model**: Selector-based approach with BasePage common methods and consistent error handling
-- **API Testing**: RestSharp-based HTTP client with fluent builders and factory pattern
-- **Database Testing**: Entity Framework Core with SQL Server and In-Memory providers
-- **Advanced Reporting**: Comprehensive Allure system with automated archiving and history preservation
+- **Modern Page Object Model**: Dual approaches with selector-based constants and ILocator patterns
+- **Advanced API Testing**: RestSharp-based HTTP client with factory pattern and analytics integration
+- **Database Testing**: Entity Framework Core 9.0 with SQL Server and In-Memory providers
+- **Professional Reporting**: Comprehensive Allure system with automated archiving and history preservation
 - **Report Management**: Professional scripts for archiving, cleaning, and serving reports
+- **Playwright Tracing**: Built-in trace capture for visual debugging and test analysis
 - **Thread-Safe Logging**: TestLogger with per-class file logging and console output
-- **Static Configuration**: Simple ConfigManager for direct configuration access
+- **Static Configuration**: Simple ConfigManager for direct configuration access without DI complexity
 - **Fake Test Data**: Bogus library integration for realistic test data generation
-- **Developer Tooling**: Playwright codegen integration and test generation workflow
+- **Developer Tooling**: Enhanced Playwright codegen and trace viewer integration
 - **CI/CD Ready**: GitHub Actions and Azure DevOps pipeline examples
 - **Clean Architecture**: Layered design with clear separation of concerns
-- **Simplified Dependencies**: Static configuration management without dependency injection
+- **Cross-Platform Scripts**: Separate Windows and Unix/Mac script versions
 
 ## 🏗️ Architecture
 
 ### Design Patterns
-- **Page Object Model** for UI test organization
+- **Page Object Model** for UI test organization (dual approach: selector-based and ILocator)
 - **Repository Pattern** for data access abstraction
 - **Builder Pattern** for test data and request construction
-- **Factory Pattern** for database and browser initialization
+- **Factory Pattern** for API clients and database initialization
 - **Template Method** for base test classes
 
 ### SOLID Principles
@@ -39,17 +40,18 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 
 ## 🛠️ Technologies
 
-| Category | Technology | Purpose |
-|----------|------------|---------|
-| **Framework** | .NET 9 | Core platform |
-| **Testing** | xUnit | Test runner and assertions |
-| **UI Automation** | Playwright | Cross-browser automation |
-| **API Testing** | RestSharp | HTTP client and requests |
-| **Database** | Entity Framework Core | ORM and database testing |
-| **Logging** | Serilog | Structured logging |
-| **Reporting** | Allure | Test reporting and analytics |
-| **Configuration** | Microsoft.Extensions.Configuration | Settings management |
-| **Test Data** | Bogus | Fake test data generation |
+| Category | Technology | Version | Purpose |
+|----------|------------|---------|---------|
+| **Framework** | .NET | 9.0 | Core platform |
+| **Testing** | xUnit | 2.9.3 | Test runner and assertions |
+| **UI Automation** | Playwright | 1.52.0 | Cross-browser automation |
+| **API Testing** | RestSharp | 112.1.0 | HTTP client and requests |
+| **Database** | Entity Framework Core | 9.0.5 | ORM and database testing |
+| **Logging** | Serilog | 4.3.0 | Structured logging |
+| **Reporting** | Allure | 2.12.1 | Test reporting and analytics |
+| **Configuration** | Microsoft.Extensions.Configuration | 9.0 | Settings management |
+| **Test Data** | Bogus | 35.6.3 | Fake test data generation |
+| **Mocking** | AutoFixture.AutoMoq | 4.18.1 | Mock object generation |
 
 ## 📁 Project Structure
 
@@ -59,69 +61,85 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │   │   └── ProductRequestBuilder.cs
 │   ├── Clients/                   # HTTP client wrappers
 │   │   ├── ApiClientFactory.cs    # Factory for creating API clients
+│   │   ├── AnalyticsClient.cs     # Analytics API client (new)
 │   │   ├── BaseClient.cs          # Base HTTP client with common operations
 │   │   └── ProductApiClient.cs    # Product-specific API client
 │   ├── Fixtures/                  # xUnit test fixtures
 │   │   ├── ApiTestFixture.cs
 │   │   └── DefaultApiTestFixture.cs
 │   └── Models/                    # API request/response models
-│       └── ProductRequest.cs
+│       ├── AnalyticsResponse.cs   # Analytics data structure (new)
+│       ├── MergedProduct.cs       # Product merger operations (new)
+│       ├── Product.cs             # Base product model (new)
+│       ├── ProductRequest.cs      # Product request model (refactored)
+│       └── TopProduct.cs          # Product with quantity tracking (new)
 │
 ├── Core/                          # Cross-cutting Concerns
 │   ├── Config/                    # Configuration management
 │   │   └── ConfigManager.cs       # Static configuration manager
 │   ├── Enums/                     # Framework enumerations
+│   │   ├── ApiClientType.cs       # API client type enumeration (updated)
 │   │   └── BrowserList.cs
 │   ├── Logging/                   # Logging utilities
 │   │   └── TestLogger.cs          # Thread-safe test logging
 │   ├── Models/                    # Framework models
 │   │   ├── BaseModel.cs
-│   │   └── PlaywrightSettings.cs
+│   │   └── PlaywrightSettings.cs  # Enhanced with tracing support
 │   └── Utils/                     # Helper utilities
 │       ├── JsonHelper.cs
-│       └── TestDataFaker.cs       # Fake test data generation
+│       └── TestDataFaker.cs       # Fake test data generation (updated)
 │
 ├── Data/                          # Data Access Layer
 │   ├── DatabaseContext/           # Database context management
 │   │   ├── DbContextFactory.cs
-│   │   └── TestDbContext.cs
+│   │   └── TestDbContext.cs       # Updated for new entity structure
 │   ├── Models/                    # Entity models
-│   │   ├── Product.cs
+│   │   ├── ProductEntity.cs       # Renamed from Product.cs (new)
 │   │   └── User.cs
 │   └── Repositories/              # Data access repositories
-│       ├── IProductRepository.cs
+│       ├── IProductRepository.cs  # Updated for ProductEntity
 │       ├── IUserRepository.cs
-│       ├── ProductRepository.cs
+│       ├── ProductRepository.cs   # Updated for ProductEntity
 │       └── UserRepository.cs
 │
 ├── Tests/                         # Test Implementation
-│   ├── Base/                      # Base test classes
-│   │   ├── BaseApiTest.cs         # Generic API test base class
-│   │   └── ProductApiTestBase.cs  # Product-specific API test base
+│   ├── Base/                      # Base test classes (restructured)
+│   │   ├── API/                   # API test base classes
+│   │   │   ├── AnalyticsBase.cs   # Analytics API test base (new)
+│   │   │   ├── BaseApiTest.cs     # Generic API test base
+│   │   │   └── ProductApiTestBase.cs # Product-specific API test base
+│   │   └── UI/                    # UI test base classes
+│   │       └── BaseUiTest.cs      # Enhanced with tracing support
 │   ├── Helpers/                   # Test helper utilities
 │   │   ├── AllureHelper.cs
-│   │   └── DataBaseTestHelper.cs
+│   │   └── DataBaseTestHelper.cs  # Updated for new entity structure
 │   ├── Tests.API/                 # API test implementations
+│   │   ├── AnalyticsTest.cs       # Analytics API tests (new)
 │   │   └── ProductApiTests.cs     # Product API test cases
 │   ├── Tests.Mocks/               # Mock and test data providers
 │   │   ├── BaseMockProvider.cs
 │   │   └── ProductServiceTest.cs
 │   └── Tests.UI/                  # UI test implementations
-│       ├── AdvancedPageTests.cs
-│       ├── BaseUiTest.cs
-│       └── BaseUrlLaunchTest.cs
+│       ├── AdvancedPageTests.cs   # Advanced UI interactions
+│       ├── BaseUrlLaunchTest.cs   # Cross-browser smoke tests
+│       └── LoginToProductPage.cs  # End-to-end user flow (new)
 │
 ├── UI/                            # UI Testing Layer
-│   ├── Pages/                     # Page Object Models with selector-based approach
-│   │   ├── BasePage.cs            # Base page with common functionality and error handling
-│   │   ├── WebElementsPage.cs     # Page with selector constants and BasePage methods
-│   │   └── AdvancedWebElementsPage.cs # Advanced page interactions using BasePage methods
+│   ├── Pages/                     # Page Object Models (dual approach)
+│   │   ├── AdvancedWebElementsPage.cs # Advanced interactions using selectors
+│   │   ├── BasePage.cs            # Base page with common functionality
+│   │   ├── BasePageILocator.cs    # ILocator-based base page (new)
+│   │   ├── LoginPage.cs           # Login page with ILocator pattern (new)
+│   │   ├── UserPage.cs            # User page with complex interactions (new)
+│   │   └── WebElementsPage.cs     # Basic page with selector constants
 │   └── PlaywrightSetup/           # Browser initialization
-│       └── PlaywrightSetup.cs
+│       └── PlaywrightSetup.cs     # Enhanced with tracing integration
 │
 ├── Documentation/                 # Project documentation
+│   ├── design-patterns.md         # Architecture patterns guide
 │   ├── from-java-cheatsheet.md   # Java to .NET transition guide
-│   ├── playwright-selectors-cheatsheet.md # Comprehensive Playwright selectors reference
+│   ├── playwright-getby-methods.md # Modern Playwright selector guide (new)
+│   ├── playwright-selectors-cheatsheet.md # Comprehensive selector reference
 │   └── workshop-program.md       # Training workshop materials
 │
 ├── reports/                      # Test Execution Reports System
@@ -138,10 +156,11 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │       └── open-report-unix.ps1  # Serve reports (Unix/Mac)
 │
 ├── allureConfig.json             # Allure reporting configuration
+├── codegen-unix.ps1              # Enhanced Playwright codegen tool (cross-platform)
 ├── run-allure-tests.ps1         # Main test execution script (Windows)
 ├── run-allure-tests-unix.ps1    # Main test execution script (Unix/Mac)
 ├── testsettings.runsettings     # XUnit parallel execution settings
-└── codegen.ps1                  # Playwright codegen tool launcher
+└── trace-viewer.ps1             # Playwright trace viewer tool (new)
 ```
 
 ## 🖥️ Cross-Platform Support
@@ -155,6 +174,8 @@ The framework provides separate execution scripts for Windows and Unix-based sys
 ### Unix/Mac/Linux Scripts  
 - `run-allure-tests-unix.ps1` - Main test execution
 - `reports/scripts/*-unix.ps1` - Report management scripts
+- `codegen-unix.ps1` - Enhanced Playwright codegen
+- `trace-viewer.ps1` - Cross-platform trace viewer
 
 The Unix scripts use forward slashes for paths and Unix-specific commands for optimal compatibility.
 
@@ -162,6 +183,7 @@ The Unix scripts use forward slashes for paths and Unix-specific commands for op
 
 ### Prerequisites
 - **.NET 9 SDK** or later
+- **PowerShell** (for cross-platform script execution)
 - **Visual Studio 2022** or **JetBrains Rider** (recommended)
 - **SQL Server LocalDB** (for database tests)
 
@@ -197,9 +219,12 @@ The Unix scripts use forward slashes for paths and Unix-specific commands for op
     "BrowserType": "Firefox",
     "Headless": false,
     "BaseUrl": "http://localhost:3000/",
+    "BaseApiHost": "http://localhost:5001",
     "DefaultTimeoutMs": 30000,
     "ViewportWidth": 1280,
-    "ViewportHeight": 800
+    "ViewportHeight": 800,
+    "SlowMoMs": 1000,
+    "EnableTracing": true
   },
   "ConnectionStrings": {
     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=TestDb_Tests;Trusted_Connection=true;"
@@ -209,7 +234,7 @@ The Unix scripts use forward slashes for paths and Unix-specific commands for op
     "RetryAttempts": 3
   },
   "TestApiSettings": {
-    "BaseUrl": "http://localhost:5001",
+    "BaseUrl": "http://localhost:5001"
   }
 }
 ```
@@ -217,6 +242,7 @@ The Unix scripts use forward slashes for paths and Unix-specific commands for op
 ### Environment Overrides
 - Create `appsettings.Development.json` for local settings
 - Use environment variables: `Playwright__BrowserType=Chrome`
+- Toggle tracing: `Playwright__EnableTracing=true`
 
 ## 🧪 Running Tests
 
@@ -226,7 +252,7 @@ The Unix scripts use forward slashes for paths and Unix-specific commands for op
 .\run-allure-tests.ps1
 
 # Unix/Mac/Linux
-.\run-allure-tests-unix.ps1
+pwsh ./run-allure-tests-unix.ps1
 
 # This will:
 # 1. Clean old results while preserving history
@@ -258,123 +284,169 @@ $env:Playwright__BrowserType="Safari"; dotnet test
 $env:Playwright__Headless="true"; dotnet test
 ```
 
+### Tracing Control
+```bash
+# Enable tracing globally
+$env:Playwright__EnableTracing="true"; dotnet test
+
+# Disable tracing
+$env:Playwright__EnableTracing="false"; dotnet test
+
+# View traces after test execution
+pwsh ./trace-viewer.ps1 -List
+pwsh ./trace-viewer.ps1 TestClassName-trace
+```
+
 ### Parallel Execution
 ```bash
-# Use optimized test settings
+# Use optimized test settings (4 concurrent threads)
 dotnet test --settings testsettings.runsettings
 ```
 
-### Manual Allure Reporting
+## 🛠️ Developer Tools
+
+### Playwright Codegen (Enhanced)
 ```bash
-# Generate report only (after test run)
-allure generate reports/allure-results -o reports/allure-report --clean
+# Basic usage
+pwsh ./codegen-unix.ps1
 
-# Serve existing report
-# Windows
-.\reports\scripts\open-report.ps1 -Port 8080
+# With specific URL and browser
+pwsh ./codegen-unix.ps1 -Url https://example.com -Browser firefox
 
-# Unix/Mac/Linux  
-.\reports\scripts\open-report-unix.ps1 -Port 8080
+# Mobile testing
+pwsh ./codegen-unix.ps1 -Device "iPhone 12"
+
+# With authentication state
+pwsh ./codegen-unix.ps1 -LoadStorage auth.json -SaveStorage new-auth.json
+
+# Show help for all options
+pwsh ./codegen-unix.ps1 -Help
 ```
+
+### Trace Viewer (New)
+```bash
+# List available traces
+pwsh ./trace-viewer.ps1 -List
+
+# Open specific trace
+pwsh ./trace-viewer.ps1 BaseUrlLaunchTest-trace
+
+# Show help
+pwsh ./trace-viewer.ps1 -Help
+```
+
+### Test Development Workflow
+1. **Generate initial test**: Use `pwsh ./codegen-unix.ps1` to record actions
+2. **Transform to test**: Convert codegen output to `BaseUiTest` pattern
+3. **Add assertions**: Use Page Object Model and proper assertions
+4. **Run locally**: Use `pwsh ./run-allure-tests-unix.ps1` for full workflow
+5. **Debug with traces**: Use `pwsh ./trace-viewer.ps1` for visual debugging
+6. **Review reports**: Check results and screenshots in Allure
 
 ## 📝 Writing Tests
 
-### API Test Example
+### API Test Example (Analytics)
 ```csharp
-public class ProductApiTests : ProductApiTestBase
+public class AnalyticsTest : AnalyticsBase
 {
-    public ProductApiTests(ITestOutputHelper output) : base(output) { }
+    public AnalyticsTest(ITestOutputHelper output) : base(output) { }
 
     [Fact]
-    public async Task Should_Create_Product_Successfully()
+    public async Task GetAnalytics_GetRawAsync()
     {
-        // Arrange - Using inherited TestLogger with additional context
-        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(Should_Create_Product_Successfully));
-        
-        var product = new ProductRequestBuilder()
-            .WithFakeData()  // Generates realistic fake data
-            .Build();
+        // Arrange
+        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(GetAnalytics_GetRawAsync));
+        caseLogger.Information("Sending GET request to /api/analytics");
 
-        caseLogger.Information("Creating product: {@Product}", product);
+        // Act - Using GetRawAsync for JSON manipulation
+        var analyticsData = await Client.GetRawAsync("/api/analytics");
+        AllureHelper.AttachString("Response Body", analyticsData.Content, "application/json", ".json");
 
-        // Act
-        var result = await Client.CreateProductAsync(product);
+        // Deserialize and work with JSON
+        JObject analyticsJson = JsonHelper.Deserialize<JObject>(analyticsData.Content);
+        JToken topProducts = analyticsJson["topProducts"];
+        var topProductsList = topProducts.ToObject<List<TopProduct>>();
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(product.Name, result.Name);
-        Assert.True(result.Price > 0);
+        Assert.NotNull(topProductsList);
+        Assert.NotEmpty(topProductsList);
         
-        caseLogger.Information("Product created successfully with ID: {Id}", result.Id);
+        var topProduct = topProductsList.OrderByDescending(p => p.Quantity).First();
+        caseLogger.Information($"Top Product: {topProduct.Name} (Quantity: {topProduct.Quantity})");
     }
 
     [Fact]
-    public async Task Should_Create_Product_With_Mixed_Data()
+    public async Task GetAnalytics_GetTypedAsync()
     {
-        // Arrange - Mix of fake and specific data
-        var product = new ProductRequestBuilder()
-            .WithFakeId()           // Random ID
-            .WithFakeName()         // Random product name
-            .WithCategory("Laptops") // Specific category
-            .WithFakePrice(100, 500) // Random price in range
-            .Build();
+        // Arrange
+        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(GetAnalytics_GetTypedAsync));
 
-        // Act
-        var result = await Client.CreateProductAsync(product);
+        // Act - Using strongly typed response
+        var analyticsData = await Client.GetAsync<AnalyticsResponse>("/api/analytics");
+        AllureHelper.AttachString("Response Body", JsonHelper.Serialize(analyticsData), "application/json", ".json");
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal("Laptops", result.Category);
-        Assert.True(result.Price >= 100 && result.Price <= 500);
+        Assert.NotNull(analyticsData);
+        Assert.NotEmpty(analyticsData.TopProducts);
+
+        // LINQ usage with strongly typed model
+        var topProduct = analyticsData.TopProducts.OrderByDescending(p => p.Quantity).First();
+        caseLogger.Information($"Top Product: {topProduct.Name} (Quantity: {topProduct.Quantity})");
     }
 }
 ```
 
-### UI Test Example with Selector-based Page Objects
+### UI Test Example (Modern Page Objects)
 ```csharp
-public class WebElementsTests : BaseUiTest
+public class LoginToProductPage : BaseUiTest
 {
-    public WebElementsTests(ITestOutputHelper output) : base(output) { }
+    public LoginToProductPage(ITestOutputHelper output) : base(output) { }
 
     [Fact]
-    public async Task Should_Enter_Text_And_Verify_Output()
+    public async Task LoginToProduct()
     {
-        // Arrange - Using inherited TestLogger with additional context
-        var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(Should_Enter_Text_And_Verify_Output));
-        var webElementsPage = new WebElementsPage(Page, _settings, caseLogger);
-        
+        // Arrange - Using ILocator-based page objects
+        var loginPage = new LoginPage(Page, _settings, TestLogger.Logger);
+        var productPage = new UserPage(Page, _settings, TestLogger.Logger);
+
         // Act
-        await webElementsPage.GoToAsync("/webelements");
-        await webElementsPage.EnterTextInputAsync("test input");
+        await loginPage.Login("user", "user");
+        await Expect(Page.Locator("h1")).ToHaveTextAsync("Welcome, user");
+
+        var productList = await productPage.ReturnProducts();
         
-        // Assert - using BasePage assertion methods
-        await webElementsPage.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "test input");
-        await TakeScreenshotAsync("text-input-verification");
+        // Assert
+        Assert.Contains("Acer Predator Helios 300", productList.Keys);
     }
 
     [Theory]
     [InlineData(BrowserList.Edge)]
     [InlineData(BrowserList.Firefox)]
     [InlineData(BrowserList.Webkit)]
-    public async Task Should_Handle_Cross_Browser_Testing(BrowserList browserType)
+    public async Task Should_Launch_BaseUrl(BrowserList browserType)
     {
-        // Arrange - Inherited TestLogger with browser context
-        var caseLogger = TestLogger.Logger.ForContext("TestMethod", $"{nameof(Should_Handle_Cross_Browser_Testing)}_{browserType}");
-        await LaunchBrowserAsync(browserType);
-        var webElementsPage = new WebElementsPage(Page, _settings, caseLogger.ForContext("Browser", browserType));
+        // Arrange - Cross-browser testing with tracing
+        var caseLogger = TestLogger.Logger.ForContext("Browser", browserType)
+                                         .ForContext("TestMethod", nameof(Should_Launch_BaseUrl));
         
-        // Act & Assert
-        await webElementsPage.GoToAsync("/webelements");
-        await webElementsPage.EnterTextInputAsync("cross-browser test");
-        
-        // Verify output using BasePage methods
-        var output = await webElementsPage.GetTextInputOutputAsync();
-        Assert.Contains("cross-browser test", output);
+        // Launch browser with tracing enabled
+        await LaunchBrowserAsync(browserType, recordVideo: true, enableTracing: true);
+        var webElements = new WebElementsPage(Page, _settings, caseLogger);
+
+        // Act
+        await webElements.GoToAsync("/webelements");
+        await TakeScreenshotAsync($"After navigating to : {Page.Url}");
+        await webElements.EnterTextInputAsync("my first text");
+        await TakeScreenshotAsync("After Input");
+
+        // Assert - using BasePage assertion methods
+        await webElements.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "my first text");
+        webElements.AssertUrlContains(_settings.BaseUrl);
     }
 }
 ```
 
-### Database Test Example
+### Database Test Example (Updated Entities)
 ```csharp
 [Fact]
 public async Task Should_Save_User_To_Database()
@@ -394,8 +466,8 @@ public async Task Should_Save_User_To_Database()
 [Fact]
 public async Task Should_Create_Multiple_Fake_Products()
 {
-    // Arrange - Create multiple products with varied fake data
-    var products = new List<Product>();
+    // Arrange - Create multiple ProductEntity instances with varied fake data
+    var products = new List<ProductEntity>();
     for (int i = 0; i < 5; i++)
     {
         products.Add(DatabaseTestHelper.CreateFakeProduct());
@@ -418,7 +490,7 @@ public async Task Should_Create_Multiple_Fake_Products()
 .\run-allure-tests.ps1
 
 # Unix/Mac/Linux
-.\run-allure-tests-unix.ps1
+pwsh ./run-allure-tests-unix.ps1
 
 # This will:
 # 1. Clean old results while preserving history
@@ -436,10 +508,10 @@ public async Task Should_Create_Multiple_Fake_Products()
 .\reports\scripts\open-report.ps1
 
 # Unix/Mac/Linux
-.\reports\scripts\archive-reports-unix.ps1 -BuildNumber "v1.2.3" -Branch "main"
-.\reports\scripts\clean-reports-unix.ps1
-.\reports\scripts\list-archives-unix.ps1 -Detailed
-.\reports\scripts\open-report-unix.ps1
+pwsh ./reports/scripts/archive-reports-unix.ps1 -BuildNumber "v1.2.3" -Branch "main"
+pwsh ./reports/scripts/clean-reports-unix.ps1
+pwsh ./reports/scripts/list-archives-unix.ps1 -Detailed
+pwsh ./reports/scripts/open-report-unix.ps1
 ```
 
 ### Advanced Allure Features
@@ -449,42 +521,85 @@ public async Task Should_Create_Multiple_Fake_Products()
   - Test defects (test code issues)  
   - Outdated tests (missing dependencies)
 - **History Preservation**: Trends and history maintained across runs
-- **Rich Attachments**: Screenshots, logs, and API responses
+- **Rich Attachments**: Screenshots, logs, API responses, and traces
 - **Environment Reporting**: Browser, platform, and framework metadata
 - **Parallel Execution**: Optimized for 4 concurrent threads
 
-### Accessing Reports
-```bash
-# Quick access (recommended)
-# Windows
-.\run-allure-tests.ps1
-# Unix/Mac/Linux
-.\run-allure-tests-unix.ps1
+## 🎭 Modern Page Object Model
 
-# Manual generation
-dotnet test --logger:allure
-allure generate reports/allure-results -o reports/allure-report --clean
-allure open reports/allure-report
+### Dual Approach Support
 
-# Using scripts
-# Windows
-.\reports\scripts\open-report.ps1 -Port 3000
-# Unix/Mac/Linux
-.\reports\scripts\open-report-unix.ps1 -Port 3000
-```
+The framework supports two modern Page Object Model approaches:
 
-### Custom Attachments
+#### 1. Selector-Based with BasePage Integration (Recommended for simple pages)
 ```csharp
-// Screenshot with automatic failure capture
-await TakeScreenshotAsync("test-state");
+public class WebElementsPage : BasePage
+{
+    // Selectors as constants for maintainability
+    private const string TextInputSelector = "#text-input";
+    private const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
 
-// JSON data attachment
-AllureHelper.AttachString("API Response", responseJson);
-AllureHelper.WriteAllureEnvironmentProperties();
+    public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
+        : base(page, settings, logger) { }
 
-// Custom files and logs
-AllureApi.AddAttachment("log-file", "text/plain", logContent);
+    // Methods use BasePage for consistent error handling
+    public async Task EnterTextInputAsync(string text) =>
+        await FillAsync(TextInputSelector, text);
+
+    public async Task<string> GetTextInputOutputAsync() =>
+        await InnerTextAsync(TextInputOutputSelector);
+}
 ```
+
+#### 2. ILocator-Based with BasePageILocator (Recommended for complex pages)
+```csharp
+public class LoginPage : BasePageILocator
+{
+    // ILocators for modern Playwright patterns
+    public ILocator UsernameInput => Page.Locator("#username");
+    public ILocator PasswordInput => Page.Locator("#password");
+    public ILocator LoginButton => Page.GetByRole(AriaRole.Button, new() { Name = "Log in" });
+
+    public LoginPage(IPage page, PlaywrightSettings settings, ILogger logger) 
+        : base(page, settings, logger) { }
+
+    public async Task Login(string username, string password)
+    {
+        await UsernameInput.FillAsync(username);
+        await PasswordInput.FillAsync(password);
+        await LoginButton.ClickAsync();
+    }
+}
+```
+
+## 🔍 Key Architectural Changes
+
+### Recent Updates (2024)
+
+#### API Model Refactoring
+- **AnalyticsClient**: New client for analytics operations (replaces UserApiClient)
+- **Enhanced API Models**: 
+  - `AnalyticsResponse` - Complex analytics data structure
+  - `MergedProduct` - Product merger operations
+  - `TopProduct` - Product with quantity tracking (extends base Product)
+  - `Product` - New base product model with common fields
+- **Inheritance-Based Models**: ProductRequest and TopProduct inherit from Product base class
+
+#### Database Layer Improvements
+- **ProductEntity**: Renamed from Product to avoid naming conflicts with API models
+- **Repository Updates**: All repositories updated to use ProductEntity
+- **Test Data Updates**: Faker and helper classes updated for new entity structure
+
+#### Tracing Integration
+- **Built-in Tracing**: Playwright tracing integrated into PlaywrightSetup
+- **Configurable Tracing**: Control via appsettings.json or per-test parameters
+- **Trace Viewer**: New PowerShell script for easy trace viewing
+- **Automatic Management**: Traces saved automatically with test execution
+
+#### Enhanced Developer Tools
+- **Cross-Platform Codegen**: Enhanced codegen-unix.ps1 with advanced options
+- **Trace Viewer**: PowerShell-based trace viewer with file management
+- **Improved Scripts**: Better error handling and cross-platform support
 
 ## 🔄 CI/CD Integration
 
@@ -496,300 +611,105 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0'
     
+    - name: Install PowerShell
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y powershell
+    
     - name: Install Playwright
-      run: pwsh bin/Debug/net9.0/playwright.ps1 install
+      run: pwsh bin/Debug/net9.0/playwright.ps1 install --with-deps
     
     - name: Run Tests with Allure
       run: |
-        .\run-allure-tests.ps1
-        .\reports\scripts\archive-reports.ps1 -BuildNumber "${{ github.run_number }}" -Branch "${{ github.ref_name }}"
+        pwsh ./run-allure-tests-unix.ps1
+        pwsh ./reports/scripts/archive-reports-unix.ps1 -BuildNumber "${{ github.run_number }}" -Branch "${{ github.ref_name }}"
     
     - name: Upload Allure Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: allure-results-${{ github.run_number }}
         path: reports/allure-results/
     
-    - name: Upload Archived Reports
-      uses: actions/upload-artifact@v3
+    - name: Upload Traces
+      uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: archived-reports-${{ github.run_number }}
-        path: reports/archive/
+        name: playwright-traces-${{ github.run_number }}
+        path: bin/Debug/net9.0/Traces/
 ```
 
-### Azure DevOps Pipeline
-```yaml
-trigger:
-- main
+## 🧪 Test Data Generation
 
-pool:
-  vmImage: 'windows-latest'
-
-steps:
-- task: UseDotNet@2
-  inputs:
-    version: '9.0.x'
-
-- script: |
-    pwsh bin/Debug/net9.0/playwright.ps1 install
-  displayName: 'Install Playwright Browsers'
-
-- script: |
-    .\run-allure-tests.ps1
-    .\reports\scripts\archive-reports.ps1 -BuildNumber "$(Build.BuildNumber)" -Branch "$(Build.SourceBranchName)"
-  displayName: 'Run Tests and Archive Reports'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/*.trx'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: 'reports/allure-results'
-    artifactName: 'allure-results'
-```
-
-### Docker Support
-```dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:9.0
-
-WORKDIR /app
-COPY . .
-
-RUN dotnet restore
-RUN dotnet build
-
-# Install Playwright dependencies
-RUN pwsh bin/Debug/net9.0/playwright.ps1 install-deps
-RUN pwsh bin/Debug/net9.0/playwright.ps1 install
-
-CMD ["./run-allure-tests.ps1"]
-```
-
-## 🛠️ Developer Tools
-
-### Playwright Codegen
-```bash
-# Launch Playwright code generator
-.\codegen.ps1
-
-# With specific URL and browser
-.\codegen.ps1 -Url https://example.com -Browser firefox
-
-# Mobile testing
-.\codegen.ps1 -Device "iPhone 12"
-
-# With authentication state
-.\codegen.ps1 -LoadStorage auth.json -SaveStorage new-auth.json
-```
-
-### Test Development Workflow
-1. **Generate initial test**: Use `.\codegen.ps1` to record actions
-2. **Transform to test**: Convert codegen output to `BaseUiTest` pattern
-3. **Add assertions**: Use Page Object Model and proper assertions
-4. **Run locally**: Use `.\run-allure-tests.ps1` for full workflow
-5. **Review reports**: Check results and screenshots in Allure
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Port Already in Use**
-```powershell
-# The open-report script automatically finds available ports
-.\reports\scripts\open-report.ps1 -Port 3000
-```
-
-**Allure Command Not Found**
-```bash
-# Install Allure via npm (global)
-npm install -g allure-commandline
-
-# Or use the bundled commands in run-allure-tests.ps1
-```
-
-**History Not Preserved**  
-History is automatically managed by `run-allure-tests.ps1`. For manual operations:
-```bash
-# Backup history before cleaning
-Copy-Item reports/allure-report/history reports/history_backup -Recurse
-# Restore after test run
-Copy-Item reports/history_backup/* reports/allure-results/history/
-```
-
-**Playwright Browser Issues**
-```bash
-# Reinstall browsers
-pwsh bin/Debug/net9.0/playwright.ps1 install --force
-
-# Check browser installation
-pwsh bin/Debug/net9.0/playwright.ps1 install --dry-run
-```
-
-**Test Execution Timeouts**
-```bash
-# Increase default timeouts in appsettings.json
-"Playwright": {
-  "DefaultTimeoutMs": 60000  // 60 seconds
-}
-
-# Or via environment variables
-$env:Playwright__DefaultTimeoutMs="60000"
-```
-
-## 🎭 Modern Page Object Model
-
-### Selector-Based Approach with BasePage Integration
-The framework uses a simplified selector-based approach that leverages BasePage common methods for consistent error handling and logging:
-
+### Enhanced Fake Data Support
 ```csharp
-public class WebElementsPage : BasePage
-{
-    // Selectors as constants for maintainability
-    private const string TextInputSelector = "#text-input";
-    private const string TextInputOutputSelector = ".web-element:has(#text-input) .web-element-output";
-    private const string CounterIncrementButtonSelector = ".web-element-counter button:has-text(\"+\")";
-    private const string DropdownSelector = "#dropdown";
+// Complete fake data for ProductEntity
+var product = TestDataFaker.CreateFakeProduct();
 
-    public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
-        : base(page, settings, logger)
-    {
-        // No locator initialization needed - selectors used directly
-    }
-
-    // Methods use BasePage methods for consistent error handling and logging
-    public async Task EnterTextInputAsync(string text) =>
-        await FillAsync(TextInputSelector, text);
-
-    public async Task<string> GetTextInputOutputAsync() =>
-        await InnerTextAsync(TextInputOutputSelector);
-
-    public async Task ClickCounterIncrementAsync() =>
-        await ClickAsync(CounterIncrementButtonSelector);
-
-    public async Task SelectDropdownAsync(string value) =>
-        await SelectOptionAsync(DropdownSelector, value);
-}
-```
-
-### Advanced Selector Patterns
-```csharp
-public class AdvancedWebElementsPage : BasePage
-{
-    // Complex selectors for nested elements
-    private const string CounterValueSelector = ".advanced-counter-section .counter-value";
-    private const string CheckboxSelector = ".advanced-checkbox-section input[type='checkbox']";
-
-    public AdvancedWebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) 
-        : base(page, settings, logger)
-    {
-    }
-
-    // Index-based element selection using CSS selectors
-    public async Task CheckCheckboxAsync(int index) =>
-        await CheckAsync($"{CheckboxSelector}:nth-child({index + 1})");
-
-    // Parameterized selectors for dynamic content
-    public async Task SelectRadioAsync(string value) =>
-        await CheckAsync($".web-element-radio-input[value='{value}']");
-
-    // Using BasePage assertion methods
-    public async Task AssertTextOutputAsync(string text) =>
-        await AssertOutputContains(TextInputOutputSelector, text);
-}
-```
-
-## 🔍 Key Features
-
-### Configuration Management
-- **Static ConfigManager** for simple configuration access without dependency injection
-- **Environment-specific** configuration support via appsettings files
-- **Type-safe configuration** with strongly-typed settings classes
-- **Direct access**: `ConfigManager.Get<string>("key")` and `ConfigManager.GetSection<T>("section")`
-
-### Browser Management
-- **Multi-browser support**: Chrome, Firefox, Safari, Edge
-- **Configurable viewports** and timeouts
-- **Automatic screenshot capture** on test failures
-- **Cross-browser testing** with Theory attributes and BrowserList enum
-
-### Page Object Model
-- **Selector-based approach**: Simple CSS selector constants with BasePage method integration
-- **Consistent error handling**: All actions use BasePage methods with standardized logging
-- **Built-in waiting**: Automatic element waiting through Playwright's Page methods
-- **Maintainable selectors**: Centralized selector constants for easy maintenance
-- **Simplified architecture**: No locator initialization overhead
-- **Enhanced debugging**: Detailed logging and error messages for all interactions
-
-### API Testing
-- **ApiClientFactory pattern** for centralized client configuration
-- **Fluent request builders** for clean test data setup
-- **Inheritance-based architecture** with BaseClient and specific API clients
-- **Automatic retries** and error handling
-- **Request/Response logging** for debugging
-
-### Database Testing
-- **In-memory database** for fast unit tests
-- **Real database** for integration tests
-- **Automatic cleanup** and test isolation
-
-### Test Data Generation
-- **Bogus library integration** for realistic fake data
-- **Fluent builder patterns** with faker methods
-- **Mix fake and real data** for flexible test scenarios
-- **No hardcoded test values** - fresh data every test run
-
-## 🎭 Test Data Examples
-
-### Using Fake Data in Builders
-```csharp
-// Complete fake data
-var product = new ProductRequestBuilder()
-    .WithFakeData()
-    .Build();
-
-// Mix of fake and specific data
-var product = new ProductRequestBuilder()
+// Mix of fake and specific data for API models
+var productRequest = new ProductRequestBuilder()
     .WithFakeId()           // Random ID
     .WithFakeName()         // Random product name  
     .WithCategory("Laptops") // Specific category
     .WithFakePrice(50, 200) // Random price in range
     .Build();
-```
 
-### Direct Faker Usage
-```csharp
-// Generate individual fake values
+// Direct faker usage
 var email = TestDataFaker.FakeEmail();
-var name = TestDataFaker.FakeName();
-var price = TestDataFaker.FakePrice(10, 500);
 var category = TestDataFaker.FakeCategory();
+var price = TestDataFaker.FakePrice(10, 500);
 
-// Create complete fake entities
-var user = TestDataFaker.CreateFakeUser();
-var product = TestDataFaker.CreateFakeProduct();
-```
-
-### Database Test Data
-```csharp
-// Create fake entities in database
+// Database entities with fake data
 var user = DatabaseTestHelper.CreateFakeUser();
 var product = DatabaseTestHelper.CreateFakeProduct();
+```
 
-// Traditional approach still available
-var user = DatabaseTestHelper.CreateTestUser("Specific Name", "specific@email.com");
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Trace Files Not Generated**
+```bash
+# Enable tracing in config
+"Playwright": { "EnableTracing": true }
+
+# Or per test
+await LaunchBrowserAsync(BrowserList.Chrome, enableTracing: true);
+
+# Check trace directory
+pwsh ./trace-viewer.ps1 -List
+```
+
+**Cross-Platform Script Issues**
+```bash
+# Ensure PowerShell is installed
+pwsh --version
+
+# Use Unix scripts on Mac/Linux
+pwsh ./run-allure-tests-unix.ps1
+pwsh ./codegen-unix.ps1
+```
+
+**API Model Conflicts**
+```csharp
+// Use fully qualified names if needed
+using ApiProduct = atf.API.Models.Product;
+using DataProduct = atf.Data.Models.ProductEntity;
+```
+
+**Port Already in Use**
+```powershell
+# Scripts automatically find available ports
+pwsh ./reports/scripts/open-report-unix.ps1 -Port 3000
 ```
 
 ## 🤝 Contributing
@@ -799,17 +719,19 @@ var user = DatabaseTestHelper.CreateTestUser("Specific Name", "specific@email.co
 - Use **async/await** for all I/O operations
 - Implement **proper error handling** with meaningful messages
 - Add **XML documentation** for public APIs
+- Maintain **cross-platform compatibility** for scripts
 
 ### Testing Guidelines
 - **One assertion per test** when possible
 - Use **descriptive test names** that explain the scenario
 - Follow **Arrange-Act-Assert** pattern
 - **Clean up resources** in test teardown
+- **Use appropriate Page Object approach** (selector-based vs ILocator)
 
 ### Pull Request Process
 1. Create feature branch from `main`
 2. Write tests for new functionality
-3. Ensure all tests pass locally
+3. Ensure all tests pass locally with tracing enabled
 4. Update documentation if needed
 5. Submit PR with descriptive title and details
 
@@ -822,6 +744,7 @@ This project is licensed under the [MIT License](LICENSE).
 - **Issues**: Report bugs and feature requests in [GitHub Issues](../../issues)
 - **Documentation**: Additional docs in `/Documentation` folder
 - **Examples**: Sample tests in `/Tests` directory
+- **Tracing**: Use `pwsh ./trace-viewer.ps1` for visual debugging
 
 ---
 

@@ -29,10 +29,14 @@ namespace atf.UI.PlaywrightSetup
         /// </summary>
         /// <param name="browserTypeOverride">Optionally specify a browser type for this instance (e.g., BrowserList.Chromium).</param>
         /// <param name="recordVideo">Whether to record video of the session.</param>
+        /// <param name="enableTracing">Whether to enable tracing for debugging.</param>
+        /// <param name="testName">Test name for trace file naming.</param>
         /// <returns>A new IPage instance.</returns>
         public static async Task<IPage> LaunchAsync(
             BrowserList? browserTypeOverride = null, 
-            bool recordVideo = false)
+            bool recordVideo = false,
+            bool? enableTracing = null,
+            string? testName = null)
         {
             try
             {
@@ -69,7 +73,26 @@ namespace atf.UI.PlaywrightSetup
                     };
                 }
                 
-                var context = await browser.NewContextAsync();
+                var context = await browser.NewContextAsync(contextOptions);
+
+                // Use parameter override or config setting for tracing
+                var shouldTrace = enableTracing ?? Settings.EnableTracing;
+                
+                // Start tracing if enabled
+                if (shouldTrace)
+                {
+                    var traceName = testName ?? $"trace-{DateTime.Now:yyyyMMdd-HHmmss}";
+                    var traceDir = Path.Combine(AppContext.BaseDirectory, "Traces");
+                    Directory.CreateDirectory(traceDir);
+                    
+                    await context.Tracing.StartAsync(new() 
+                    {
+                        Title = traceName,
+                        Screenshots = true,
+                        Snapshots = true,
+                        Sources = true
+                    });
+                }
 
                 var page = await context.NewPageAsync();
                 page.SetDefaultTimeout(Settings.DefaultTimeoutMs);
@@ -78,6 +101,28 @@ namespace atf.UI.PlaywrightSetup
             catch (Exception ex)
             {
                 throw new Exception("Failed to launch Playwright page.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Stops tracing and saves the trace file.
+        /// </summary>
+        /// <param name="context">The browser context to stop tracing for.</param>
+        /// <param name="testName">Name for the trace file.</param>
+        public static async Task StopTracingAsync(IBrowserContext context, string testName)
+        {
+            try
+            {
+                var traceDir = Path.Combine(AppContext.BaseDirectory, "Traces");
+                Directory.CreateDirectory(traceDir);
+                
+                var tracePath = Path.Combine(traceDir, $"{testName}-trace.zip");
+                await context.Tracing.StopAsync(new() { Path = tracePath });
+            }
+            catch (Exception ex)
+            {
+                // Don't fail tests if tracing fails, just log it
+                Console.WriteLine($"Failed to stop tracing: {ex.Message}");
             }
         }
 }

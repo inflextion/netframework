@@ -82,8 +82,8 @@ namespace atf.Tests.Base.UI
     /// </summary>
     public virtual async Task InitializeAsync()
     {
-        Page = await PlaywrightLauncher.LaunchAsync();
-       
+        var testName = GetType().Name;
+        Page = await PlaywrightLauncher.LaunchAsync(testName: testName);
     }
 
     /// <summary>
@@ -92,7 +92,8 @@ namespace atf.Tests.Base.UI
     /// </summary>
     /// <param name="browserType">The browser type to launch</param>
     /// <param name="recordVideo">Whether to record video for this browser session</param>
-    protected async Task LaunchBrowserAsync(BrowserList browserType, bool recordVideo = false)
+    /// <param name="enableTracing">Whether to enable tracing (overrides config setting)</param>
+    protected async Task LaunchBrowserAsync(BrowserList browserType, bool recordVideo = false, bool? enableTracing = null)
     {
         // Properly close existing browser resources
         if (Page?.Context is not null)
@@ -102,7 +103,8 @@ namespace atf.Tests.Base.UI
             await Page.Context.Browser.CloseAsync();
 
         // Launch new page with specified browser and video recording option
-        Page = await PlaywrightLauncher.LaunchAsync(browserType, recordVideo);
+        var testName = $"{GetType().Name}-{browserType}";
+        Page = await PlaywrightLauncher.LaunchAsync(browserType, recordVideo, enableTracing, testName);
         
         // Browser context will be added via ForContext() in individual tests
         TestLogger.Information($"Browser launched: {browserType}, RecordVideo: {recordVideo}", browserType, recordVideo);
@@ -115,6 +117,13 @@ namespace atf.Tests.Base.UI
     {
         try
         {
+            // Stop tracing before closing context
+            if (Context != null)
+            {
+                var testName = GetType().Name;
+                await PlaywrightLauncher.StopTracingAsync(Context, testName);
+            }
+            
             // Close in reverse order of creation: Page → Context → Browser
             if (Page != null)
             {
