@@ -19,7 +19,7 @@ public class LoginToProductPage : BaseUiTest
         _output = output;
     }
 
-    [Fact]
+    [Fact(DisplayName = "Login to Product Page")]
     public async Task LoginToProduct()
     {
         var loginPage = new LoginPage(Page, _settings, TestLogger.Logger);

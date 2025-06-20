@@ -1,4 +1,4 @@
-# Playwright Trace Viewer Script
+# Playwright Trace Viewer Script (Unix/Mac/Linux)
 # Opens Playwright trace files for debugging test execution
 
 param(
@@ -14,7 +14,7 @@ if ($Help) {
     Write-Host "==============================" -ForegroundColor Blue
     Write-Host ""
     Write-Host "Usage:" -ForegroundColor Green
-    Write-Host "  ./trace-viewer.ps1 [TRACE_NAME] [OPTIONS]" -ForegroundColor Cyan
+    Write-Host "  ./trace-viewer-unix.ps1 [TRACE_NAME] [OPTIONS]" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Parameters:" -ForegroundColor Green
     Write-Host "  TraceName      Name of trace file (without .zip extension)" -ForegroundColor White
@@ -23,9 +23,9 @@ if ($Help) {
     Write-Host "  -Help          Show this help message" -ForegroundColor White
     Write-Host ""
     Write-Host "Examples:" -ForegroundColor Green
-    Write-Host "  ./trace-viewer.ps1 BaseUrlLaunchTest-trace" -ForegroundColor Cyan
-    Write-Host "  ./trace-viewer.ps1 -List" -ForegroundColor Cyan
-    Write-Host "  ./trace-viewer.ps1 MyTest-trace -TracesDir custom/traces" -ForegroundColor Cyan
+    Write-Host "  powershell ./trace-viewer-unix.ps1 BaseUrlLaunchTest-trace" -ForegroundColor Cyan
+    Write-Host "  powershell ./trace-viewer-unix.ps1 -List" -ForegroundColor Cyan
+    Write-Host "  powershell ./trace-viewer-unix.ps1 MyTest-trace -TracesDir custom/traces" -ForegroundColor Cyan
     Write-Host ""
     exit 0
 }
@@ -61,7 +61,7 @@ if ($List) {
             Write-Host ""
         }
         
-        Write-Host "Usage: ./trace-viewer.ps1 <trace-name>" -ForegroundColor Cyan
+        Write-Host "Usage: powershell ./trace-viewer-unix.ps1 <trace-name>" -ForegroundColor Cyan
     }
     exit 0
 }
@@ -70,8 +70,8 @@ if ($List) {
 if (-not $TraceName) {
     Write-Host "ERROR: Please specify a trace name or use -List to see available traces" -ForegroundColor Red
     Write-Host ""
-    Write-Host "Usage: ./trace-viewer.ps1 <trace-name>" -ForegroundColor Cyan
-    Write-Host "       ./trace-viewer.ps1 -List" -ForegroundColor Cyan
+    Write-Host "Usage: powershell ./trace-viewer-unix.ps1 <trace-name>" -ForegroundColor Cyan
+    Write-Host "       powershell ./trace-viewer-unix.ps1 -List" -ForegroundColor Cyan
     exit 1
 }
 
