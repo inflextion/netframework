@@ -19,21 +19,40 @@ public class LoginToProductPage : BaseUiTest
         _output = output;
     }
 
-    [Fact(DisplayName = "Login to Product Page")]
+    [Fact(DisplayName = "Login to Product Page")] 
     public async Task LoginToProduct()
     {
-        var loginPage = new LoginPage(Page, _settings, TestLogger.Logger);
-        var productPage = new UserPage(Page, _settings, TestLogger.Logger);
+        var caseLogger = TestLogger
+            .ForTestMethod(nameof(LoginToProduct)) // Automatically adds start separator
+            .ForBrowser(PlaywrightSettings.BrowserType.ToString());
 
-        await loginPage.Login("user", "user");
-        await Expect(Page.Locator("h1")).ToHaveTextAsync("Welcome, user");
+        try 
+        {
+            var loginPage = new LoginPage(Page, PlaywrightSettings, caseLogger);
+            var productPage = new UserPage(Page, PlaywrightSettings, caseLogger);
 
-        var productList = await productPage.ReturnProducts();
+            caseLogger.Information("🔐 Attempting login with user credentials");
         
+            await loginPage.Login("user", "user");
+            caseLogger.ForStep("Login").Information("✅ Login successful - user authenticated");
         
-        Assert.Contains("Acer Predator Helios 300", productList.Keys);
+            await Expect(Page.Locator("h1")).ToHaveTextAsync("Welcome, user");
+            caseLogger.ForStep("Verification").Information("✅ Welcome message verified");
         
-
-
+            var productList = await productPage.ReturnProducts();
+            caseLogger.ForStep("Product Retrieval").Information("📦 Retrieved {ProductCount} products", productList.Count);
+        
+            Assert.Contains("Acer Predator Helios 300", productList.Keys);
+            caseLogger.Information("✅ Target product found in list");
+        
+            // Test passed
+            caseLogger.EndTestMethod(nameof(LoginToProduct), passed: true);
+        }
+        catch (Exception ex)
+        {
+            caseLogger.Error(ex, "❌ Test failed with exception");
+            caseLogger.EndTestMethod(nameof(LoginToProduct), passed: false);
+            throw; // Re-throw to fail the test
+        }
     }
 }

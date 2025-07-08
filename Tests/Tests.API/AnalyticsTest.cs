@@ -30,7 +30,7 @@ namespace atf.Tests.Tests.API
         public async Task GetAnalytics_GetRawAsync()
         {
             // Arrange - Using inherited TestLogger with additional context
-            var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(GetAnalytics_GetRawAsync));
+            var caseLogger = TestLogger.ForContext("TestMethod", nameof(GetAnalytics_GetRawAsync));
 
             caseLogger.Information("Test started");
             caseLogger.Information("Sending GET  request to /api/analytics");
@@ -65,7 +65,7 @@ namespace atf.Tests.Tests.API
         public async Task GetAnalytics_GetTypedAsync()
         {
             // Arrange
-            var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(GetAnalytics_GetTypedAsync));
+            var caseLogger = TestLogger.ForContext("TestMethod", nameof(GetAnalytics_GetTypedAsync));
 
             caseLogger.Information("Test started");
             caseLogger.Information("Sending GET request to /api/analytics");

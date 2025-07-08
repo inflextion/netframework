@@ -42,7 +42,7 @@ namespace atf.Tests.Tests.API
         public async Task PostProduct_ShouldReturnCreated()
         {
             // Use inherited TestLogger with additional context
-            var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(PostProduct_ShouldReturnCreated));
+            var caseLogger = TestLogger.ForContext("TestMethod", nameof(PostProduct_ShouldReturnCreated));
 
             caseLogger.Information("Test started: Creating a new product");
 
@@ -76,7 +76,7 @@ namespace atf.Tests.Tests.API
         public async Task PostProduct_WithMixedFakeData_ShouldReturnCreated()
         {
             // Use inherited TestLogger with additional context
-            var caseLogger = TestLogger.Logger.ForContext("TestMethod", nameof(PostProduct_WithMixedFakeData_ShouldReturnCreated));
+            var caseLogger = TestLogger.ForContext("TestMethod", nameof(PostProduct_WithMixedFakeData_ShouldReturnCreated));
             
             // Arrange - Mix of fake and specific data
             var productRequest = new ProductRequestBuilder()

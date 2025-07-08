@@ -5,78 +5,119 @@ using Xunit.Abstractions;
 namespace atf.Core.Logging
 {
     /// <summary>
-    /// Thread-safe instance-based logger for test cases with file and console output support.
-    /// Provides consistent logging configuration across all test types.
+    /// Simplified test logger that always writes to both console and file
     /// </summary>
     public class TestLogger : IDisposable
     {
         private readonly ILogger _logger;
         private bool _disposed = false;
         private readonly ITestOutputHelper _testOutputHelper;
-        private readonly string _browserType;
+        private readonly string _testClassName;
 
         /// <summary>
-        /// Creates a new TestLogger instance with test output and optional file logging.
+        /// Creates a TestLogger that writes to both console and class-level file
         /// </summary>
-        /// <param name="testOutputHelper">XUnit test output helper</param>
-        /// <param name="testName">Name of the test for context</param>
-        /// <param name="writeToFile">Whether to write logs to file (default: true)</param>
-        /// <param name="browserType">Browser type for UI tests (optional)</param>
-        public TestLogger(ITestOutputHelper testOutputHelper, string testName, bool writeToFile = true, string browserType = null)
+        public TestLogger(ITestOutputHelper testOutputHelper, string testClassName, string browserType = null)
         {
             _testOutputHelper = testOutputHelper;
-            _browserType = browserType ?? "N/A";
+            _testClassName = testClassName;
             
-            var outputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{TestName}] [{Browser}] {Message:lj}{NewLine}{Exception}";
+            var outputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] [{TestClass}] [{Browser}] [{TestMethod}] [{Step}] {Message:lj}{NewLine}{Exception}";
             
-            var loggerConfig = new LoggerConfiguration()
+            // Create logs directory structure
+            var logDirectory = Path.Combine("Logs", testClassName);
+            Directory.CreateDirectory(logDirectory);
+            
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var logFileName = Path.Combine(logDirectory, $"{testClassName}_{timestamp}.log");
+            
+            _logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(ConfigManager.Configuration)
                 .WriteTo.TestOutput(testOutputHelper, outputTemplate: outputTemplate)
+                .WriteTo.File(logFileName, 
+                    outputTemplate: outputTemplate,
+                    shared: true,
+                    rollOnFileSizeLimit: true,
+                    fileSizeLimitBytes: 50 * 1024 * 1024) // 50MB limit
                 .Enrich.WithProperty("Application", "AutomationFramework")
-                .Enrich.WithProperty("TestName", testName)
+                .Enrich.WithProperty("TestClass", testClassName)
                 .Enrich.WithProperty("TestContext", "XUnit")
-                .Enrich.WithProperty("Browser", _browserType)
-                .MinimumLevel.Debug();
-
-            // Add file logging if requested
-            if (writeToFile)
-            {
-                var logFileName = $"Logs/{testName}.log";
-                loggerConfig = loggerConfig.WriteTo.File(logFileName, outputTemplate: outputTemplate);
-            }
-
-            _logger = loggerConfig.CreateLogger();
+                .Enrich.WithProperty("Browser", browserType ?? "N/A")
+                .Enrich.WithProperty("TestMethod", "ClassSetup")
+                .Enrich.WithProperty("Step", "Initial")
+                .MinimumLevel.Debug()
+                .CreateLogger();
         }
 
         /// <summary>
-        /// Creates a contextual logger with additional properties.
+        /// Private constructor for contextual loggers
         /// </summary>
-        /// <param name="propertyName">Property name</param>
-        /// <param name="value">Property value</param>
-        /// <returns>Logger with additional context</returns>
-        public ILogger ForContext(string propertyName, object value)
+        private TestLogger(ITestOutputHelper testOutputHelper, string testClassName, ILogger contextLogger)
         {
-            return _logger.ForContext(propertyName, value);
+            _testOutputHelper = testOutputHelper;
+            _testClassName = testClassName;
+            _logger = contextLogger;
         }
 
         /// <summary>
-        /// Gets the underlying Serilog logger instance.
+        /// Creates context for a specific test method with visual separation
         /// </summary>
-        public ILogger Logger => _logger;
-
-        /// <summary>
-        /// Creates a contextual logger for a specific test method.
-        /// </summary>
-        /// <param name="testMethodName">Name of the test method</param>
-        /// <param name="writeToFile">Whether to write logs to file for this test method</param>
-        /// <returns>TestLogger configured for the specific test method</returns>
-        public TestLogger ForTestMethod(string testMethodName, bool writeToFile = true)
+        public TestLogger ForTestMethod(string testMethodName)
         {
-            var methodTestName = $"{testMethodName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}";
-            return new TestLogger(_testOutputHelper, methodTestName, writeToFile, _browserType);
+            // Add visual separation before starting new test
+            _logger.Information("");
+            _logger.Information("═══════════════════════════════════════════════════════════════");
+            _logger.Information("🧪 STARTING TEST: {TestMethod}", testMethodName);
+            _logger.Information("🕒 Test Started At: {StartTime}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            _logger.Information("═══════════════════════════════════════════════════════════════");
+            _logger.Information("");
+
+            var contextLogger = _logger.ForContext("TestMethod", testMethodName);
+            return new TestLogger(_testOutputHelper, _testClassName, contextLogger);
         }
 
-        // Convenience methods for common logging levels
+        /// <summary>
+        /// Creates context for a specific test step
+        /// </summary>
+        public TestLogger ForStep(string stepName)
+        {
+            var contextLogger = _logger.ForContext("Step", stepName);
+            return new TestLogger(_testOutputHelper, _testClassName, contextLogger);
+        }
+
+        /// <summary>
+        /// Creates context with additional properties
+        /// </summary>
+        public TestLogger ForContext(string propertyName, object value)
+        {
+            var contextLogger = _logger.ForContext(propertyName, value);
+            return new TestLogger(_testOutputHelper, _testClassName, contextLogger);
+        }
+
+        /// <summary>
+        /// Updates browser context
+        /// </summary>
+        public TestLogger ForBrowser(string browserType)
+        {
+            return ForContext("Browser", browserType);
+        }
+
+        /// <summary>
+        /// Marks the end of a test method with visual separation
+        /// </summary>
+        public void EndTestMethod(string testMethodName, bool passed = true)
+        {
+            _logger.Information("");
+            _logger.Information("───────────────────────────────────────────────────────────────");
+            _logger.Information("🏁 TEST COMPLETED: {TestMethod}", testMethodName);
+            _logger.Information("📊 Test Result: {Result}", passed ? "✅ PASSED" : "❌ FAILED");
+            _logger.Information("🕒 Test Ended At: {EndTime}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            _logger.Information("───────────────────────────────────────────────────────────────");
+            _logger.Information("");
+            _logger.Information("");
+        }
+
+        // Logging methods
         public void Information(string messageTemplate, params object[] propertyValues)
             => _logger.Information(messageTemplate, propertyValues);
 
@@ -92,14 +133,8 @@ namespace atf.Core.Logging
         public void Debug(string messageTemplate, params object[] propertyValues)
             => _logger.Debug(messageTemplate, propertyValues);
 
-        public void Verbose(string messageTemplate, params object[] propertyValues)
-            => _logger.Verbose(messageTemplate, propertyValues);
-
         public void Fatal(string messageTemplate, params object[] propertyValues)
             => _logger.Fatal(messageTemplate, propertyValues);
-
-        public void Fatal(Exception exception, string messageTemplate, params object[] propertyValues)
-            => _logger.Fatal(exception, messageTemplate, propertyValues);
 
         public void Dispose()
         {

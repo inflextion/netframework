@@ -1,7 +1,6 @@
 ﻿using Allure.Net.Commons;
 using System.Text;
-using atf.API.Models;
-using Newtonsoft.Json;
+using atf.Core.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace atf.Tests.Helpers
@@ -27,15 +26,16 @@ namespace atf.Tests.Helpers
         }
 
         /// <summary>
-        /// Serializes a ProductRequest and attaches it as a JSON body to the Allure report.
+        /// Serializes a T class and attaches it as a JSON body to the Allure report.
         /// </summary>
         /// <param name="name">The name of the attachment.</param>
-        /// <param name="request">The ProductRequest object to serialize and attach.</param>
-        public static void AttachString(string name, ProductRequest request)
+        /// <param name="request">The T object to serialize and attach.</param>
+        public static void AttachString<T>(string name, T request) where T: class
         {
+            var jsonContent = JsonHelper.Serialize(request, indented: true);
             AllureApi.Step($"Attach: {name}", () =>
             {
-                AllureApi.AddAttachment("Request Body", "application/json", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)));
+                AllureApi.AddAttachment("Request Body", "application/json", Encoding.UTF8.GetBytes(jsonContent));
             });
         }
 
@@ -54,10 +54,12 @@ namespace atf.Tests.Helpers
 
         /// <summary>
         /// Writes Allure environment properties from a configuration file to the Allure results directory.
+        /// Logs output using the provided TestLogger.
         /// </summary>
-        public static void WriteAllureEnvironmentProperties()
+        /// <param name="logger">The TestLogger instance for logging output.</param>
+        public static void WriteAllureEnvironmentProperties(TestLogger logger)
         {
-            var configPath = "allureconfig.json";
+            var configPath = "allureConfig.json";
             var outputPath = Path.Combine("allure-results", "environment.properties");
 
             string configText;
@@ -67,23 +69,13 @@ namespace atf.Tests.Helpers
             }
             catch (Exception ex)
             {
-                AllureApi.AddAttachment(
-                    "WriteAllureEnvironmentProperties Exception",
-                    "text/plain",
-                    Encoding.UTF8.GetBytes($"Failed to read config file '{configPath}':\n{ex}"),
-                    ".txt"
-                );
+                logger.Error($"Failed to read config file '{configPath}': {ex}");
                 return; // Can't proceed if the config file isn't readable
             }
 
             if (!JsonHelper.IsValidJson(configText))
             {
-                AllureApi.AddAttachment(
-                    "WriteAllureEnvironmentProperties Exception",
-                    "text/plain",
-                    Encoding.UTF8.GetBytes($"Config file '{configPath}' contains invalid JSON."),
-                    ".txt"
-                );
+                logger.Error($"Config file '{configPath}' contains invalid JSON.");
                 return;
             }
 
@@ -94,12 +86,7 @@ namespace atf.Tests.Helpers
             }
             catch (Exception ex)
             {
-                AllureApi.AddAttachment(
-                    "WriteAllureEnvironmentProperties Exception",
-                    "text/plain",
-                    Encoding.UTF8.GetBytes($"Config file '{configPath}' could not be parsed as JSON object:\n{ex}"),
-                    ".txt"
-                );
+                logger.Error($"Config file '{configPath}' could not be parsed as JSON object: {ex}");
                 return;
             }
 
@@ -113,6 +100,11 @@ namespace atf.Tests.Helpers
                         sw.WriteLine($"{prop.Name}={prop.Value}");
                     }
                 }
+                logger.Information($"Allure environment properties written to '{outputPath}'.");
+            }
+            else
+            {
+                logger.Warning($"No 'environment' object found in '{configPath}'.");
             }
         }
     }

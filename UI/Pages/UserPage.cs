@@ -1,3 +1,4 @@
+using atf.Core.Logging;
 using atf.Core.Models;
 using Microsoft.Playwright;
 using Serilog;
@@ -10,7 +11,7 @@ public class UserPage: BasePageILocator
     public ILocator ProductCards => Page.Locator(".product-card");
     
     public ILocator OpenCartButton => Page.GetByRole(AriaRole.Button, new() { Name = "Open Cart" });
-    public UserPage(IPage page, PlaywrightSettings settings, ILogger logger) : base(page, settings, logger)
+    public UserPage(IPage page, PlaywrightSettings settings, TestLogger logger) : base(page, settings, logger)
     {
         // Initialize any specific elements or actions for the UserPage here
     }

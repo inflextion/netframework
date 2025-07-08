@@ -10,7 +10,7 @@ namespace atf.UI.PlaywrightSetup
     /// </summary>
     public static class PlaywrightLauncher
     {
-        private static readonly PlaywrightSettings Settings;
+        public static readonly PlaywrightSettings Settings;
 
         static PlaywrightLauncher()
         {

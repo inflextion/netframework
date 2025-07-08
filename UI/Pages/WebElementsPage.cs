@@ -1,3 +1,4 @@
+using atf.Core.Logging;
 using atf.Core.Models;
 using Microsoft.Playwright;
 using Serilog;
@@ -22,7 +23,7 @@ namespace atf.UI.Pages
         public const string ToggleEnableButtonSelector = ".web-element-toggle-button.enabled";
         public const string ToggleOutputSelector = ".web-element-toggle-group ~ .web-element-output";
 
-        public WebElementsPage(IPage page, PlaywrightSettings settings, ILogger logger) : base(page, settings, logger)
+        public WebElementsPage(IPage page, PlaywrightSettings settings, TestLogger logger) : base(page, settings, logger)
         {
         }
 

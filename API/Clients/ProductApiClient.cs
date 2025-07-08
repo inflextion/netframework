@@ -1,6 +1,4 @@
 ﻿using RestSharp;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using atf.API.Models;
 
 namespace atf.API.Clients

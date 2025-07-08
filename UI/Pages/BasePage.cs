@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using Serilog;
 using Allure.Net.Commons;
+using atf.Core.Logging;
 using atf.Core.Models;
 
 namespace atf.UI.Pages
@@ -9,9 +10,9 @@ namespace atf.UI.Pages
     {
         protected IPage Page { get; }
         protected PlaywrightSettings Settings { get; }
-        protected ILogger Logger { get; }
+        protected TestLogger Logger { get; }
 
-        protected BasePage(IPage page, PlaywrightSettings settings, ILogger logger)
+        protected BasePage(IPage page, PlaywrightSettings settings, TestLogger logger)
         {
             Page = page;
             Settings = settings;

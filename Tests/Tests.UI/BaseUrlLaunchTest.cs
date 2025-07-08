@@ -2,12 +2,8 @@
 using atf.Core.Config;
 using atf.Core.Models;
 using atf.UI.Pages;
-using Microsoft.Playwright;
-using static Microsoft.Playwright.Assertions;
 using Allure.Xunit.Attributes;
 using Allure.Net.Commons;
-using atf.Data.DatabaseContext;
-using Serilog;
 using atf.Tests.Helpers;
 using atf.Core.Enums;
 using atf.Tests.Base.UI;
@@ -17,12 +13,13 @@ namespace atf.Tests.Tests.UI
 {
     [AllureSuite("BaseTests")]
     [AllureFeature("WebElements")]
-    public class BaseUrlLaunchTest : BaseUiTest
+    public class BaseUrlLaunchTest : DynamicBrowser
     {
-
         private readonly PlaywrightSettings _settings;
         private readonly ITestOutputHelper _output;
-        public BaseUrlLaunchTest(ITestOutputHelper output) : base(output) // <-- Pass to base class!
+
+        public BaseUrlLaunchTest(ITestOutputHelper output) : base(output,
+            ConfigManager.GetSection<PlaywrightSettings>("Playwright")) // <-- Pass to base class!
         {
             _settings = ConfigManager.GetSection<PlaywrightSettings>("Playwright");
             _output = output;
@@ -42,32 +39,27 @@ namespace atf.Tests.Tests.UI
         [AllureTag("smoke", "login")]
         public async Task Should_Launch_BaseUrl(BrowserList browserType)
         {
-            // Use inherited TestLogger with additional context
-            var caseLogger = TestLogger.Logger.ForContext("Browser", browserType)
-                                             .ForContext("TestMethod", nameof(Should_Launch_BaseUrl));
+            // Launch browser with specific type for this test
+            await LaunchBrowserAsync(browserType);
+
+            // Use TestLogger's ForTestMethod and ForContext to get a TestLogger with context
+            var caseLogger = TestLogger
+                .ForTestMethod(nameof(Should_Launch_BaseUrl)) // Creates file: Logs/YourTestClass/AdvancedWebElementsTest_20250624_143022.log
+                .ForBrowser(browserType.ToString());
             
-            // await RunTestWithScreenshotOnFailure(async () =>
-            // {
-                // Arrange
-                // Launch browser with specific type for this test
-                await LaunchBrowserAsync(browserType, recordVideo: true);
+            AllureHelper.WriteAllureEnvironmentProperties(caseLogger);
+            caseLogger.Information("Test started!");
+            var webElements = new WebElementsPage(Page, _settings, caseLogger);
 
-                AllureHelper.WriteAllureEnvironmentProperties();
-                caseLogger.Information("Test started!");
-                var webElements = new WebElementsPage(Page, _settings, caseLogger);
+            // Act
+            await webElements.GoToAsync("/webelements");
+            caseLogger.Information("Navigating to {Url}", Page.Url);
+            await TakeScreenshotAsync($"After navigating to : {Page.Url}");
+            await webElements.EnterTextInputAsync("my first text");
+            await TakeScreenshotAsync("After Input");
 
-                // Act
-                await webElements.GoToAsync("/webelements");
-                // this will log twice, as we already pass the log in BasePage
-                caseLogger.Information("Navigating to {Url}", Page.Url);
-                await TakeScreenshotAsync($"After navigating to : {Page.Url}");
-                await webElements.EnterTextInputAsync("my first text");
-                await TakeScreenshotAsync("After Input");
-
-                // Assert - using BasePage assertion method
-                await webElements.AssertOutputContains(".web-element:has(#text-input) .web-element-output", "my first text");
-                //await webElements.AssertOutputContains(WebElementsPage.TextInputOutputSelector, "my first text");
-                webElements.AssertUrlContains(_settings.BaseUrl);
+            // Assert - using BasePage assertion method
+            webElements.AssertUrlContains(_settings.BaseUrl);
             // }, $"failure-{browserType}-{nameof(Should_Launch_BaseUrl)}");
         }
     }

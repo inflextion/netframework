@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using atf.Core.Logging;
 using atf.Core.Models;
 using atf.Data.Models;
 using Microsoft.Playwright;
@@ -13,7 +14,7 @@ public class LoginPage:BasePageILocator
     public ILocator PasswordInput => Page.GetByRole(AriaRole.Textbox, new() {Name = "password" });
     public ILocator LoginButton => Page.GetByRole(AriaRole.Button, new() { Name = "Login" });
 
-    public LoginPage(IPage page, PlaywrightSettings settings, ILogger logger) : base(page, settings, logger){}
+    public LoginPage(IPage page, PlaywrightSettings settings, TestLogger logger) : base(page, settings, logger){}
 
     public async Task Login(string username, string password)
     {

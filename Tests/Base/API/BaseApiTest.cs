@@ -19,7 +19,9 @@ namespace atf.Tests.Base
         protected BaseApiTest(ITestOutputHelper output)
         {
             OutputHelper = output;
-            TestLogger = new TestLogger(output, GetType().Name, writeToFile: true);
+            TestLogger = new TestLogger(output, GetType().Name);
+    
+            TestLogger.Information("Test class initialized: {ClassName}", GetType().Name);
         }
 
         protected abstract TClient CreateClient();
