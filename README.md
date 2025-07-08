@@ -81,11 +81,12 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │   │   ├── ApiClientType.cs       # API client type enumeration (updated)
 │   │   └── BrowserList.cs
 │   ├── Logging/                   # Logging utilities
-│   │   └── TestLogger.cs          # Thread-safe test logging
+│   │   └── TestLogger.cs          # Thread-safe test logging (enhanced)
 │   ├── Models/                    # Framework models
 │   │   ├── BaseModel.cs
 │   │   └── PlaywrightSettings.cs  # Enhanced with tracing support
 │   └── Utils/                     # Helper utilities
+│       ├── FileUtils.cs           # File operations and utilities (new)
 │       ├── JsonHelper.cs
 │       └── TestDataFaker.cs       # Fake test data generation (updated)
 │
@@ -109,10 +110,12 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │   │   │   ├── BaseApiTest.cs     # Generic API test base
 │   │   │   └── ProductApiTestBase.cs # Product-specific API test base
 │   │   └── UI/                    # UI test base classes
-│   │       └── BaseUiTest.cs      # Enhanced with tracing support
+│   │       ├── BaseUiTest.cs      # Enhanced with tracing support
+│   │       └── DynamicBrowser.cs  # Dynamic browser management (new)
 │   ├── Helpers/                   # Test helper utilities
-│   │   ├── AllureHelper.cs
-│   │   └── DataBaseTestHelper.cs  # Updated for new entity structure
+│   │   ├── AllureHelper.cs        # Enhanced with better attachments
+│   │   ├── DatabaseTestHelper.cs  # Updated for new entity structure
+│   │   └── ScreenshotHelper.cs    # Enhanced screenshot capture (new)
 │   ├── Tests.API/                 # API test implementations
 │   │   ├── AnalyticsTest.cs       # Analytics API tests (new)
 │   │   └── ProductApiTests.cs     # Product API test cases
@@ -129,6 +132,7 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │   │   ├── AdvancedWebElementsPage.cs # Advanced interactions using selectors
 │   │   ├── BasePage.cs            # Base page with common functionality
 │   │   ├── BasePageILocator.cs    # ILocator-based base page (new)
+│   │   ├── IBasePage.cs           # Base page interface contract (new)
 │   │   ├── LoginPage.cs           # Login page with ILocator pattern (new)
 │   │   ├── UserPage.cs            # User page with complex interactions (new)
 │   │   └── WebElementsPage.cs     # Basic page with selector constants
@@ -157,10 +161,12 @@ A comprehensive test automation framework built with **.NET 9** for API, UI, and
 │
 ├── allureConfig.json             # Allure reporting configuration
 ├── codegen-unix.ps1              # Enhanced Playwright codegen tool (cross-platform)
+├── netframework.sln              # Visual Studio solution file (new)
 ├── run-allure-tests.ps1         # Main test execution script (Windows)
 ├── run-allure-tests-unix.ps1    # Main test execution script (Unix/Mac)
 ├── testsettings.runsettings     # XUnit parallel execution settings
-└── trace-viewer.ps1             # Playwright trace viewer tool (new)
+├── trace-viewer.ps1             # Playwright trace viewer tool (new)
+└── trace-viewer-unix.ps1        # Cross-platform trace viewer (new)
 ```
 
 ## 🖥️ Cross-Platform Support
@@ -175,7 +181,7 @@ The framework provides separate execution scripts for Windows and Unix-based sys
 - `run-allure-tests-unix.ps1` - Main test execution
 - `reports/scripts/*-unix.ps1` - Report management scripts
 - `codegen-unix.ps1` - Enhanced Playwright codegen
-- `trace-viewer.ps1` - Cross-platform trace viewer
+- `trace-viewer-unix.ps1` - Cross-platform trace viewer
 
 The Unix scripts use forward slashes for paths and Unix-specific commands for optimal compatibility.
 
@@ -292,9 +298,13 @@ $env:Playwright__EnableTracing="true"; dotnet test
 # Disable tracing
 $env:Playwright__EnableTracing="false"; dotnet test
 
-# View traces after test execution
+# View traces after test execution (Windows)
 pwsh ./trace-viewer.ps1 -List
 pwsh ./trace-viewer.ps1 TestClassName-trace
+
+# View traces after test execution (Unix/Mac)
+pwsh ./trace-viewer-unix.ps1 -List
+pwsh ./trace-viewer-unix.ps1 TestClassName-trace
 ```
 
 ### Parallel Execution
@@ -325,6 +335,7 @@ pwsh ./codegen-unix.ps1 -Help
 
 ### Trace Viewer (New)
 ```bash
+# Windows
 # List available traces
 pwsh ./trace-viewer.ps1 -List
 
@@ -333,6 +344,16 @@ pwsh ./trace-viewer.ps1 BaseUrlLaunchTest-trace
 
 # Show help
 pwsh ./trace-viewer.ps1 -Help
+
+# Unix/Mac
+# List available traces
+pwsh ./trace-viewer-unix.ps1 -List
+
+# Open specific trace
+pwsh ./trace-viewer-unix.ps1 BaseUrlLaunchTest-trace
+
+# Show help
+pwsh ./trace-viewer-unix.ps1 -Help
 ```
 
 ### Test Development Workflow
@@ -340,7 +361,7 @@ pwsh ./trace-viewer.ps1 -Help
 2. **Transform to test**: Convert codegen output to `BaseUiTest` pattern
 3. **Add assertions**: Use Page Object Model and proper assertions
 4. **Run locally**: Use `pwsh ./run-allure-tests-unix.ps1` for full workflow
-5. **Debug with traces**: Use `pwsh ./trace-viewer.ps1` for visual debugging
+5. **Debug with traces**: Use `pwsh ./trace-viewer.ps1` (Windows) or `pwsh ./trace-viewer-unix.ps1` (Unix/Mac) for visual debugging
 6. **Review reports**: Check results and screenshots in Allure
 
 ## 📝 Writing Tests
@@ -744,7 +765,7 @@ This project is licensed under the [MIT License](LICENSE).
 - **Issues**: Report bugs and feature requests in [GitHub Issues](../../issues)
 - **Documentation**: Additional docs in `/Documentation` folder
 - **Examples**: Sample tests in `/Tests` directory
-- **Tracing**: Use `pwsh ./trace-viewer.ps1` for visual debugging
+- **Tracing**: Use `pwsh ./trace-viewer.ps1` (Windows) or `pwsh ./trace-viewer-unix.ps1` (Unix/Mac) for visual debugging
 
 ---
 
